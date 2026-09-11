@@ -1,0 +1,69 @@
+# Netlify configuration
+# Docs: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+# No build step — this is plain static HTML/CSS/JS, so there's no
+# [build] command, just the publish directory (repo root). Explicit
+# here so a fresh site connect doesn't need this set by hand in the UI.
+[build]
+  publish = "."
+
+# Security headers — applied to every page.
+# CSP is intentionally strict on the public site: every vendor library
+# (GSAP, Lucide, Lenis, SplitType, same as the fonts) is self-hosted from
+# /vendor, so script-src doesn't need cdnjs/unpkg at all — a normal page
+# view makes zero requests to a third-party host, meaning no visitor IP
+# ever reaches one just from browsing. identity.netlify.com stays listed
+# because script.js loads it, but only when an actual Netlify invite/
+# recovery link is opened — see the comment in script.js. The handful of
+# icons the site uses (menu, x, chevron-down, an external-link glyph,
+# play) are hand-written inline <svg> in index.html/script.js rather than
+# pulled from a ~430KB icon library for five glyphs. No 'unsafe-inline'
+# script-src (every inline <script> lives in script.js so this can stay
+# tight), no 'unsafe-inline' style-src (nothing on the public site
+# injects <style> tags at runtime — Tailwind, which needed that, was
+# removed as unused).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://identity.netlify.com https://api.netlify.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+
+# /admin needs a looser policy: Decap CMS (also self-hosted from
+# /vendor now — no unpkg.com needed here either) is a large bundled app
+# that injects its own <style> tags at runtime, compiles its
+# config-driven form validation via AJV (which needs 'unsafe-eval' —
+# confirmed by actually running `netlify dev` locally; without it the
+# CMS fails to load at all with an EvalError), and talks to Git Gateway/
+# GitHub to save content. Only Identity remains as an external script
+# host, for the same login reason as above.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' https://api.netlify.com https://identity.netlify.com https://api.github.com https://*.githubusercontent.com http://localhost:8081 http://127.0.0.1:8081; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+
+# Uploaded photos rarely change once published — cache them hard.
+# (Decap CMS always uploads under a new filename, so this is safe:
+# an edited photo gets a new URL rather than overwriting the old one.)
+[[headers]]
+  for = "/uploads/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# CSS/JS: cache for an hour so updates still roll out reasonably fast
+# without re-downloading on every visit.
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

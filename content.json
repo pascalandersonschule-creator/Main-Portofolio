@@ -1,0 +1,117 @@
+{
+  "hero": {
+    "sub": "Concert photography, portraits and cover art — shot for artists who don’t wait for permission.",
+    "ctaSecondary": "Book a session",
+    "float2Image": "/uploads/dsc07390.jpg",
+    "float1Image": "/uploads/dsc05750-edit-2.jpg",
+    "ctaPrimary": "View the work",
+    "tags": "Self-taught, Kiel DE, Booking open",
+    "line1": "Concert.",
+    "line2": "Portraits.",
+    "line3": "Covers."
+  },
+  "gallery": [
+    {
+      "type": "stage",
+      "image": "/uploads/dsc05645.jpg"
+    },
+    {
+      "type": "covers",
+      "caption": "Vol. 3 Mixtape",
+      "image": "/uploads/dsc07367.jpg"
+    },
+    {
+      "type": "stage",
+      "caption": "brkn @KiWo 2025",
+      "video": "",
+      "poster": "",
+      "image": "/uploads/DSC02240.jpg"
+    },
+    {
+      "type": "covers",
+      "image": "/uploads/dsc06956.jpg"
+    },
+    {
+      "type": "stage",
+      "caption": "",
+      "image": "/uploads/dsc05750-edit.jpg"
+    },
+    {
+      "type": "covers",
+      "image": "/uploads/dsc05395-2.jpg"
+    },
+    {
+      "type": "stage",
+      "image": "/uploads/dsc05983.jpg"
+    },
+    {
+      "type": "covers",
+      "image": "/uploads/dsc07414.jpg"
+    },
+    {
+      "type": "stage",
+      "caption": "",
+      "image": "/uploads/dsc05483-edit.jpg"
+    },
+    {
+      "type": "covers",
+      "caption": "Midnight EP",
+      "image": "/uploads/dsc07388.jpg"
+    },
+    {
+      "type": "covers",
+      "image": "/uploads/dsc07014.jpg"
+    },
+    {
+      "type": "night",
+      "caption": "After Hours",
+      "image": ""
+    },
+    {
+      "type": "night",
+      "caption": "Backstage",
+      "image": ""
+    },
+    {
+      "type": "motion",
+      "caption": "Encore",
+      "video": "",
+      "poster": ""
+    }
+  ],
+  "about": {
+    "lead": "Kiel-based, self-taught, and still obsessed with the moment before it’s gone — on stage, on camera, on repeat.",
+    "image": ""
+  },
+  "contact": {
+    "lead": "Shooting a show, a reel, or a cover — get in touch and tell me what you’re working on.",
+    "email": "hello@pascalanderson.com"
+  },
+  "footer": {
+    "email": "hello@pascalanderson.com",
+    "instagram": "",
+    "impressumUrl": "impressum.html",
+    "datenschutzUrl": "datenschutz.html"
+  },
+  "legal": {
+    "fullName": "Pascal Anderson",
+    "street": "Weidenweg 9",
+    "zipCity": "24376 Kappeln",
+    "phone": "",
+    "vatId": "",
+    "lastUpdated": "11. September 2026"
+  },
+  "personalWork": {
+    "intro": "A few favorites shot outside the usual gig — travel, portraits, street. Not for booking, just for looking.",
+    "gallery": [
+      {
+        "caption": "",
+        "image": ""
+      },
+      {
+        "caption": "",
+        "image": ""
+      }
+    ]
+  }
+}

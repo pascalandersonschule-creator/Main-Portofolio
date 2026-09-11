@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Impressum — Pascal Anderson</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="vignette" aria-hidden="true"></div>
+
+<header class="nav">
+  <a href="index.html#top" class="nav__logo">Pascal Anderson</a>
+  <nav class="nav__links">
+    <a href="index.html#work">Work</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<main class="legal">
+  <div class="legal__inner">
+    <p class="legal__placeholder-flag">⚠ Platzhalter — kein rechtsgültiges Impressum. Bitte durch echte Angaben ersetzen und im Zweifel anwaltlich prüfen lassen.</p>
+
+    <h1 class="legal__title">Impressum</h1>
+    <p class="legal__intro">Angaben gemäß § 5 TMG.</p>
+
+    <section class="legal__section">
+      <h2>Anbieter</h2>
+      <p>
+        <span data-legal="fullName">[Vollständiger Name]</span><br>
+        <span data-legal="street">[Straße und Hausnummer]</span><br>
+        <span data-legal="zipCity">[PLZ und Ort]</span><br>
+        Deutschland
+      </p>
+    </section>
+
+    <section class="legal__section">
+      <h2>Kontakt</h2>
+      <p>
+        E-Mail: <a href="mailto:hello@pascalanderson.com" id="legalEmailLink">hello@pascalanderson.com</a><br>
+        <span data-legal="phoneLine">Telefon: <span data-legal="phone">[optional]</span></span>
+      </p>
+    </section>
+
+    <section class="legal__section" data-legal="vatSection">
+      <h2>Umsatzsteuer-ID</h2>
+      <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: <span data-legal="vatId">[Falls vorhanden ausfüllen — sonst bleibt dieser Abschnitt automatisch ausgeblendet.]</span></p>
+    </section>
+
+    <section class="legal__section">
+      <h2>Verantwortlich für den Inhalt</h2>
+      <p><span data-legal="fullName">[Vollständiger Name]</span>, Anschrift wie oben (§ 18 Abs. 2 MStV).</p>
+    </section>
+
+    <section class="legal__section">
+      <h2>Streitschlichtung</h2>
+      <p>
+        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.
+        Ich bin nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer
+        Verbraucherschlichtungsstelle teilzunehmen.
+      </p>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <span>© <span id="year"></span> Pascal Anderson</span>
+  <div class="footer__links">
+    <a href="index.html">Back to site</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </div>
+</footer>
+
+<script src="legal.js"></script>
+</body>
+</html>

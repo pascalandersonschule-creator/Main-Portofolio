@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Pascal Anderson — Concert Photography, Portraits &amp; Cover Art</title>
+<meta name="description" content="Pascal Anderson — concert photography, portraits and Spotify cover artwork, shot in Kiel for artists, rappers and the clubs behind them.">
+<meta name="theme-color" content="#050505">
+
+<!-- Canonical/OG/Twitter tags need an absolute URL, hence the full domain below. -->
+<link rel="canonical" href="https://pascalanderson.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pascal Anderson — Concert Photography, Portraits & Cover Art">
+<meta property="og:description" content="Concert photography, portraits and Spotify cover artwork, shot in Kiel for artists, rappers and the clubs behind them.">
+<meta property="og:url" content="https://pascalanderson.com/">
+<meta property="og:image" content="https://pascalanderson.com/uploads/dsc05750-edit-2.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pascal Anderson — Concert Photography, Portraits & Cover Art">
+<meta name="twitter:description" content="Concert photography, portraits and Spotify cover artwork, shot in Kiel for artists, rappers and the clubs behind them.">
+<meta name="twitter:image" content="https://pascalanderson.com/uploads/dsc05750-edit-2.jpg">
+
+<!-- Minimal inline favicon (no binary file to fetch/host) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23050505'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ff2ec4'/%3E%3C/svg%3E">
+
+<!-- Fonts AND every vendor script below are self-hosted (see /fonts and
+     /vendor) — no request to any external server happens on a normal
+     page view, so no visitor IP ever reaches a third party just to
+     render this page. See datenschutz.html. The one exception is
+     Netlify Identity, loaded conditionally further down only when an
+     actual invite/recovery link needs it — never on an ordinary visit. -->
+<link rel="preload" href="fonts/SpaceGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/SpaceMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<!-- Vignette (behind everything, adds depth to the black) -->
+<div class="vignette" aria-hidden="true"></div>
+<!-- Scanline overlay -->
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- Cursor orb: single interactive system, changes state contextually -->
+<div class="cursor-orb" id="cursorOrb" aria-hidden="true">
+  <span class="cursor-orb__label" id="cursorLabel"></span>
+</div>
+
+<!-- Camcorder HUD: persistent, subtle recording indicator + running
+     timecode since page load. Decorative only. -->
+<div class="hud" aria-hidden="true">
+  <span class="hud__dot"></span> REC <span class="hud__time" id="hudTime">00:00:00</span>
+</div>
+
+<!-- NAV -->
+<header class="nav">
+  <a href="#top" class="nav__logo">Pascal Anderson</a>
+  <nav class="nav__links">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+    <svg class="nav__toggle-icon nav__toggle-icon--open" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+    <svg class="nav__toggle-icon nav__toggle-icon--close" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  </button>
+</header>
+
+<main id="main-content">
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero__left">
+    <div class="hero__inner">
+      <div class="hero__tags" id="heroTags">
+        <span class="hero__tag">Self-taught</span>
+        <span class="hero__tag">Kiel DE</span>
+        <span class="hero__tag">Booking open</span>
+      </div>
+      <h1 class="hero__title" id="heroTitle">
+        <span class="hero__line">Concert.</span>
+        <span class="hero__line">Portraits.</span>
+        <span class="hero__line">Covers.</span>
+      </h1>
+      <p class="hero__sub" id="heroSub">Concert photography, portraits and cover art — shot for artists who don’t wait for permission.</p>
+      <div class="hero__actions">
+        <a href="#work" class="btn btn--primary" id="heroCtaPrimary">View the work</a>
+        <a href="#contact" class="btn btn--ghost" id="heroCtaSecondary">Book a session</a>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+      <svg class="hero__scroll-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+  </div>
+  <div class="hero__visual" aria-hidden="true">
+    <div class="hero__float hero__float--1" data-slot="float1">
+      <div class="tile__ph tile__ph--1">
+        <img class="tile__img" alt="" loading="eager" fetchpriority="high" decoding="async">
+      </div>
+      <span class="hero__float-tc">TC 00:04:12:07</span>
+    </div>
+    <div class="hero__float hero__float--2" data-slot="float2">
+      <div class="tile__ph tile__ph--5">
+        <img class="tile__img" alt="" loading="lazy" decoding="async">
+      </div>
+      <span class="hero__float-tc">TC 00:11:03:22</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- WORK -->
+<section class="work" id="work">
+  <div class="work__head">
+    <h2 class="section-title">Work</h2>
+    <div class="filters" role="group" aria-label="Filter by category">
+      <button class="filter is-active" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter" data-filter="stage" aria-pressed="false">Stage</button>
+      <button class="filter" data-filter="night" aria-pressed="false">Night</button>
+      <button class="filter" data-filter="portraits" aria-pressed="false">Portraits</button>
+      <button class="filter" data-filter="covers" aria-pressed="false">Covers</button>
+      <button class="filter" data-filter="motion" aria-pressed="false">Motion</button>
+    </div>
+  </div>
+
+  <!-- Tiles are rendered here by script.js from content.json — as many
+       or as few as you add in /admin, no fixed limit. -->
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close">Close <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev" aria-label="Previous"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+  <button class="lightbox__nav lightbox__nav--next" id="lightboxNext" aria-label="Next"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+  <div class="lightbox__stage" id="lightboxStage">
+    <div class="lightbox__ph" id="lightboxPh">
+      <img class="tile__img" id="lightboxImg" alt="" loading="eager" decoding="async">
+      <video class="lightbox__video" id="lightboxVideo" muted loop playsinline controls></video>
+    </div>
+  </div>
+  <p class="lightbox__caption" id="lightboxCaption"></p>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about__media" data-slot="about">
+    <div class="tile__ph tile__ph--about">
+      <img class="tile__img" alt="Pascal Anderson" loading="lazy" decoding="async">
+    </div>
+  </div>
+  <div class="about__text">
+    <h2 class="section-title">About</h2>
+    <p class="about__lead" id="aboutLead">Kiel-based, self-taught, and still obsessed with the moment before it’s gone — on stage, on camera, on repeat.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact__inner">
+    <h2 class="section-title">Next project?</h2>
+    <p class="contact__lead" id="contactLead">Shooting a show, a reel, or a cover — get in touch and tell me what you’re working on.</p>
+
+    <form class="contact__form" id="contactForm" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="contact">
+      <p class="hidden-field" aria-hidden="true">
+        <label>Don’t fill this out if you’re human: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+      </p>
+      <p class="field-legend">* Pflichtfeld</p>
+      <div class="field">
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name" autocomplete="name" maxlength="100" required>
+      </div>
+      <div class="field">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" autocomplete="email" spellcheck="false" maxlength="254" required>
+      </div>
+      <div class="field field--full">
+        <label for="phone">Phone (optional)</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="30" inputmode="tel">
+      </div>
+      <div class="field field--full">
+        <label for="message">What are you interested in? *</label>
+        <textarea id="message" name="message" rows="4" maxlength="2000" placeholder="A show to shoot, a reel, a cover — tell me a bit about it." required></textarea>
+      </div>
+      <div class="field field--full field--consent">
+        <label class="checkbox">
+          <input type="checkbox" id="consent" name="consent" required>
+          <span lang="de">Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung dieser Anfrage einverstanden. *</span>
+        </label>
+      </div>
+      <button type="submit" class="btn btn--primary">Send message</button>
+      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <span>© <span id="year"></span> Pascal Anderson</span>
+  <a href="personal.html" class="footer__personal">Personal Work</a>
+  <div class="footer__links">
+    <a href="mailto:hello@pascalanderson.com" id="footerEmail">hello@pascalanderson.com</a>
+    <a href="#" target="_blank" rel="noopener" id="footerInstagram"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg> Instagram</a>
+    <a href="impressum.html" id="footerImpressum">Impressum</a>
+    <a href="datenschutz.html" id="footerDatenschutz">Datenschutz</a>
+  </div>
+</footer>
+
+<!-- Vendor scripts: self-hosted from /vendor (see SETUP-GUIDE.md for how
+     to bump a version). Downloaded once, verified byte-for-byte against
+     the CDN version they replace, then served from this domain — a
+     normal page view never contacts cdnjs.cloudflare.com or unpkg.com,
+     so no visitor IP reaches either of them. -->
+
+<!-- GSAP (Für High-End Scroll- & Physics-Animationen) -->
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+
+<!-- Lenis Smooth Scroll (Exklusives Trägheits-Scrollen wie auf Designer-Websites) -->
+<script src="vendor/lenis.min.js"></script>
+
+<!-- SplitType (splits the hero headline into characters for a GSAP stagger reveal) -->
+<script src="vendor/split-type.min.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>

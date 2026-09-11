@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Personal Work — Pascal Anderson</title>
+<meta name="description" content="Personal photography outside the main portfolio — travel, portraits and street, shot by Pascal Anderson.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#050505">
+
+<link rel="canonical" href="https://pascalanderson.com/personal.html">
+
+<!-- Minimal inline favicon (no binary file to fetch/host) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23050505'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ff2ec4'/%3E%3C/svg%3E">
+
+<!-- Fonts are self-hosted — see index.html for why. -->
+<link rel="preload" href="fonts/SpaceGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/SpaceMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="vignette" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<header class="nav">
+  <a href="index.html#top" class="nav__logo">Pascal Anderson</a>
+  <nav class="nav__links">
+    <a href="index.html#work">Work</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="main-content">
+  <section class="personal">
+    <h1 class="personal__title">Personal Work</h1>
+    <p class="personal__intro" id="personalIntro"></p>
+  </section>
+
+  <section class="personal-gallery">
+    <div class="gallery" id="personalGallery"></div>
+  </section>
+</main>
+
+<!-- LIGHTBOX — same markup/behavior as the main site's -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close">Close ×</button>
+  <div class="lightbox__stage" id="lightboxStage">
+    <div class="lightbox__ph" id="lightboxPh">
+      <img class="tile__img" id="lightboxImg" alt="" loading="eager" decoding="async">
+    </div>
+  </div>
+  <p class="lightbox__caption" id="lightboxCaption"></p>
+</div>
+
+<footer class="footer">
+  <span>© <span id="year"></span> Pascal Anderson</span>
+  <div class="footer__links">
+    <a href="index.html">Back to site</a>
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </div>
+</footer>
+
+<script src="personal.js"></script>
+</body>
+</html>
