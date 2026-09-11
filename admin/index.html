@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Content Manager — Pascal Anderson</title>
+</head>
+<body>
+  <!-- This page loads Decap CMS (formerly Netlify CMS). It reads
+       admin/config.yml automatically — nothing else to configure here.
+
+       Decap is self-hosted from /vendor (downloaded once, verified
+       byte-for-byte against the exact pinned version it replaces — see
+       SETUP-GUIDE.md for how to bump it) so logging in here doesn't send
+       your IP to unpkg.com. Netlify Identity is the one exception, since
+       Netlify serves/updates that one themselves at this exact URL — the
+       person loading this page is about to log in via Identity anyway,
+       so there's no separate disclosure needed the way there would be
+       for a random visitor. -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="../vendor/decap-cms.js"></script>
+
+  <!-- Live preview: mirrors the real page's own CSS + roughly its
+       markup, so editing a field shows something close to the actual
+       result instead of a bare list of text fields. Wrapped so a bug
+       here can never take down the editor itself, only the preview. -->
+  <script>
+    try {
+      CMS.registerPreviewStyle('/styles.css');
+
+      var PreviewTemplate = createClass({
+        val: function (path, fallback) {
+          var v = this.props.entry.getIn(['data'].concat(path));
+          return v === undefined || v === null || v === '' ? fallback : v;
+        },
+        assetUrl: function (path) {
+          var v = this.props.entry.getIn(['data'].concat(path));
+          if (!v) return '';
+          var asset = this.props.getAsset(v);
+          return asset ? asset.toString() : '';
+        },
+        render: function () {
+          var self = this;
+          var tags = this.val(['hero', 'tags'], '')
+            .split(',')
+            .map(function (t) { return t.trim(); })
+            .filter(Boolean);
+
+          var gallery = this.props.entry.getIn(['data', 'gallery']);
+
+          return h('div', { style: { background: '#050505', minHeight: '100%', paddingBottom: '48px' } },
+
+            h('section', { className: 'hero', style: { minHeight: 'auto', padding: '48px 32px', gridTemplateColumns: '1fr' } },
+              h('div', { className: 'hero__tags' },
+                tags.map(function (t, i) { return h('span', { className: 'hero__tag', key: i }, t); })
+              ),
+              h('h1', { className: 'hero__title', style: { color: '#f2f2f2', fontSize: '3rem' } },
+                h('span', { className: 'hero__line', style: { color: '#f2f2f2' } }, self.val(['hero', 'line1'], 'Concert.')), h('br'),
+                h('span', { className: 'hero__line', style: { color: '#f2f2f2' } }, self.val(['hero', 'line2'], 'Reels.')), h('br'),
+                h('span', { className: 'hero__line', style: { color: '#f2f2f2' } }, self.val(['hero', 'line3'], 'Covers.'))
+              ),
+              h('p', { className: 'hero__sub' }, this.val(['hero', 'sub'], '')),
+              h('div', { className: 'hero__actions' },
+                h('span', { className: 'btn btn--primary' }, this.val(['hero', 'ctaPrimary'], 'View the work')),
+                h('span', { className: 'btn btn--ghost' }, this.val(['hero', 'ctaSecondary'], 'Book a session'))
+              )
+            ),
+
+            h('section', { className: 'work', style: { padding: '32px' } },
+              h('h2', { className: 'section-title' }, 'Work'),
+              h('div', { className: 'gallery', style: { marginTop: '24px', gridAutoRows: 'auto', gridTemplateColumns: 'repeat(3, 1fr)' } },
+                gallery ? gallery.map(function (item, i) {
+                  var type = item.get('type');
+                  var img = type === 'motion' ? self.assetUrl(['gallery', i, 'poster']) : self.assetUrl(['gallery', i, 'image']);
+                  var aspect = type === 'motion' ? '9/16' : (type === 'covers' ? '1/1' : '4/5');
+                  return h('figure', {
+                    className: 'tile', key: i,
+                    style: {
+                      gridRowEnd: 'auto', gridColumn: 'span 1', aspectRatio: aspect,
+                      background: img ? ('center/cover no-repeat url(' + img + ')') : 'rgba(242,242,242,0.06)',
+                    },
+                  },
+                    h('figcaption', {}, item.get('caption'))
+                  );
+                }).toArray() : null
+              )
+            ),
+
+            h('section', { className: 'about', style: { padding: '32px', display: 'block' } },
+              h('div', {
+                className: 'about__media',
+                style: {
+                  maxWidth: '280px', aspectRatio: '4/5',
+                  background: this.assetUrl(['about', 'image']) ? ('center/cover no-repeat url(' + this.assetUrl(['about', 'image']) + ')') : 'rgba(242,242,242,0.06)',
+                },
+              }),
+              h('h2', { className: 'section-title', style: { marginTop: '24px' } }, 'About'),
+              h('p', { className: 'about__lead' }, this.val(['about', 'lead'], ''))
+            ),
+
+            h('section', { className: 'contact', style: { padding: '32px' } },
+              h('h2', { className: 'section-title' }, 'Next project?'),
+              h('p', { className: 'contact__lead' }, this.val(['contact', 'lead'], ''))
+            )
+          );
+        },
+      });
+
+      CMS.registerPreviewTemplate('site', PreviewTemplate);
+    } catch (err) {
+      console.error('Preview template failed to register — the editor still works, just without the live preview.', err);
+    }
+  </script>
+</body>
+</html>

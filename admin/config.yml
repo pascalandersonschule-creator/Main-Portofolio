@@ -1,1 +1,248 @@
+backend:
+  name: git-gateway
+  branch: main
 
+# Lets you use the CMS on your own machine with zero Netlify account/
+# login needed — but only when both of these are true at once:
+#  1. the site is being viewed on localhost/127.0.0.1
+#  2. `npx decap-server` is running alongside your local server
+# Deployed on Netlify, neither is true, so it's silently ignored and
+# `backend:` above (git-gateway) is used as normal. See SETUP-GUIDE.md.
+local_backend: true
+
+# Where uploaded images/videos are stored in the repo, and the URL path
+# they're served at on the live site.
+media_folder: "uploads"
+public_folder: "/uploads"
+
+# Runs in the browser on every new image upload, before it's saved
+# anywhere — shrinks camera originals (often 8-20MB) down to a sane web
+# size without a visible quality loss, and strips GPS/EXIF metadata for
+# privacy. Applies to every "image" field below (hero photos, gallery
+# photos, motion posters, the about portrait); the "video" field is a
+# different widget type and isn't touched by this.
+# Only affects NEW uploads from this point on — photos already in
+# /uploads keep their original size until re-uploaded.
+media_processing:
+  enabled: true
+  quality: 85
+  strip_metadata: true
+  width: 3000
+  height: null
+
+# Show the live preview pane by default (see admin/index.html for the
+# custom preview template that makes this actually look like the site).
+show_preview_links: true
+
+# Editors are taken straight to the one content file — no confusing
+# "collections" list, just the site's content, ready to edit. Each
+# section below opens collapsed so the form doesn't feel like one giant
+# wall of fields — click a section's title bar to open it.
+collections:
+  - name: "content"
+    label: "Website Content"
+    files:
+      - name: "site"
+        label: "Site Content"
+        file: "content.json"
+        fields:
+          - label: "1. Hero Section"
+            name: "hero"
+            widget: "object"
+            collapsed: true
+            hint: "The big headline and the two floating photos at the very top of the site."
+            fields:
+              - label: "Bio tags (comma-separated)"
+                name: "tags"
+                widget: "string"
+                hint: "Shown as small pills above the headline, e.g. \"Self-taught, Kiel DE, Booking open\""
+              - label: "Headline — line 1"
+                name: "line1"
+                widget: "string"
+                hint: "One short word per line works best, e.g. \"Concert.\""
+              - label: "Headline — line 2"
+                name: "line2"
+                widget: "string"
+              - label: "Headline — line 3"
+                name: "line3"
+                widget: "string"
+              - label: "Subtext"
+                name: "sub"
+                widget: "string"
+                hint: "One sentence under the headline."
+              - label: "Primary button text"
+                name: "ctaPrimary"
+                widget: "string"
+              - label: "Secondary button text"
+                name: "ctaSecondary"
+                widget: "string"
+              - label: "Floating photo 1 (large, top right)"
+                name: "float1Image"
+                widget: "image"
+                required: false
+              - label: "Floating photo 2 (small, bottom left)"
+                name: "float2Image"
+                widget: "image"
+                required: false
+
+          - label: "2. Gallery"
+            name: "gallery"
+            widget: "list"
+            collapsed: true
+            summary: "{{fields.type}} — {{fields.caption}}"
+            hint: >-
+              Every tile in the Work section, in the order they'll appear.
+              Drag the ☰ handle on a collapsed entry to reorder it. Add as many
+              as you like with "Add gallery" below, or remove one with the ✕.
+              A tile only shows up on the live site once its Photo (or Video,
+              for Motion) is filled in — everything else on a tile is optional,
+              so it's fine to leave Caption blank.
+            fields:
+              - label: "Type — the only required field"
+                name: "type"
+                widget: "select"
+                options:
+                  - { label: "Stage", value: "stage" }
+                  - { label: "Night", value: "night" }
+                  - { label: "Covers", value: "covers" }
+                  - { label: "Motion", value: "motion" }
+                hint: "Just decides which fields below apply — Stage/Night/Covers use Photo, Motion uses Video. Upload photos in whatever aspect ratio they actually are (square, 3:4, 4:5, landscape...) — the gallery sizes each tile to match, no cropping to a fixed shape."
+              - label: "Caption (optional)"
+                name: "caption"
+                widget: "string"
+                required: false
+                hint: "Shown as a small label on the tile. Leave empty and it just won't show one."
+              - label: "Photo (Stage · Night · Covers)"
+                name: "image"
+                widget: "image"
+                required: false
+                hint: "Not used for Motion — that uses Video below instead."
+              - label: "Video (Motion)"
+                name: "video"
+                widget: "file"
+                required: false
+                hint: "Only for Motion tiles. A muted, looping mp4 — keep it short and compressed, ideally under ~15 MB."
+              - label: "Poster photo (Motion)"
+                name: "poster"
+                widget: "image"
+                required: false
+                hint: "Only for Motion tiles — the still image shown before the video starts playing."
+
+          - label: "3. About"
+            name: "about"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Short bio line", name: "lead", widget: "text" }
+              - label: "Portrait photo"
+                name: "image"
+                widget: "image"
+                required: false
+
+          - label: "4. Contact"
+            name: "contact"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Intro text above the form", name: "lead", widget: "text" }
+              - label: "Email address enquiries go to"
+                name: "email"
+                widget: "string"
+                hint: "Where the contact form's fallback (if Netlify Forms is ever unreachable) opens the visitor's mail app to."
+
+          - label: "5. Footer"
+            name: "footer"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Displayed email", name: "email", widget: "string" }
+              - label: "Instagram URL"
+                name: "instagram"
+                widget: "string"
+                required: false
+                hint: "Leave empty to hide the Instagram link entirely."
+              - label: "Impressum page URL"
+                name: "impressumUrl"
+                widget: "string"
+                hint: "Usually just \"impressum.html\" — only change this if you renamed that file."
+              - label: "Datenschutz page URL"
+                name: "datenschutzUrl"
+                widget: "string"
+                hint: "Usually just \"datenschutz.html\" — only change this if you renamed that file."
+
+          - label: "6. Legal (Impressum & Datenschutz)"
+            name: "legal"
+            widget: "object"
+            collapsed: true
+            hint: >-
+              The identity details German law requires on the Impressum and
+              Datenschutz pages. Without a real name and address filled in
+              here, those two pages are not legally valid — check with a
+              lawyer if unsure. The contact email shown on both pages comes
+              from the Footer section above, not from here.
+            fields:
+              - label: "Full name or business name"
+                name: "fullName"
+                widget: "string"
+                required: false
+              - label: "Street and house number"
+                name: "street"
+                widget: "string"
+                required: false
+              - label: "ZIP code and city"
+                name: "zipCity"
+                widget: "string"
+                required: false
+              - label: "Phone number (optional)"
+                name: "phone"
+                widget: "string"
+                required: false
+                hint: "Leave empty to hide the phone line on the Impressum page entirely."
+              - label: "VAT ID / Umsatzsteuer-ID (optional)"
+                name: "vatId"
+                widget: "string"
+                required: false
+                hint: "Leave empty to hide that section on the Impressum page entirely."
+              - label: "Datenschutz — last updated"
+                name: "lastUpdated"
+                widget: "string"
+                required: false
+                hint: "e.g. \"7. September 2026\" — shown as the \"Stand:\" date."
+
+          - label: "7. Personal Work page"
+            name: "personalWork"
+            widget: "object"
+            collapsed: true
+            hint: >-
+              A small, separate gallery for photography outside the main
+              portfolio — travel, portraits, street. Linked quietly from
+              the footer as "Personal Work", not from the main navigation,
+              so it never competes with the concert/nightlife portfolio.
+            fields:
+              - label: "Intro line"
+                name: "intro"
+                widget: "text"
+                hint: "One or two sentences shown at the top of the page."
+              - label: "Photos"
+                name: "gallery"
+                widget: "list"
+                collapsed: true
+                summary: "{{fields.caption}}"
+                hint: >-
+                  Add as many as you like, in any aspect ratio — same as
+                  the main gallery. Caption is optional. A photo shows up
+                  once its Photo field is filled in.
+                  If a photo shows an identifiable private person (not
+                  yourself, not a performer at a public show), you need
+                  their permission before publishing it here — that's a
+                  legal requirement in Germany, separate from anything
+                  else on this site.
+                fields:
+                  - label: "Photo"
+                    name: "image"
+                    widget: "image"
+                    required: false
+                  - label: "Caption (optional)"
+                    name: "caption"
+                    widget: "string"
+                    required: false
