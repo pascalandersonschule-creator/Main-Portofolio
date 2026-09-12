@@ -200,41 +200,6 @@ body::before{
 }
 
 /* ============================================
-   Camcorder HUD — persistent REC + running timecode
-   ============================================ */
-.hud{
-  position:fixed;
-  top:calc(74px + env(safe-area-inset-top)); right:max(var(--gutter), env(safe-area-inset-right));
-  z-index:500;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-family:var(--font-mono);
-  font-size:0.72rem;
-  letter-spacing:0.04em;
-  color:var(--grey);
-  pointer-events:none;
-}
-.hud__dot{
-  width:6px; height:6px;
-  border-radius:50%;
-  background:var(--rec);
-  box-shadow:0 0 6px 1px rgba(255,43,69,0.6);
-  animation:hud-pulse 1.6s ease-in-out infinite;
-}
-@keyframes hud-pulse{
-  0%, 100%{ opacity:1; }
-  50%{ opacity:0.35; }
-}
-.hud__time{ color:var(--white); font-variant-numeric:tabular-nums; }
-@media (max-width:760px){
-  .hud{ display:none; }
-}
-@media (prefers-reduced-motion: reduce){
-  .hud__dot{ animation:none; }
-}
-
-/* ============================================
    NAV
    ============================================ */
 .nav{
@@ -490,19 +455,6 @@ html.lenis, html.lenis body{ height:auto; }
 }
 .hero__float::before{ top:10px; left:10px; border-top:1.5px solid var(--accent); border-left:1.5px solid var(--accent); opacity:0.9; }
 .hero__float::after{ bottom:10px; right:10px; border-bottom:1.5px solid var(--accent); border-right:1.5px solid var(--accent); opacity:0.9; }
-.hero__float-tc{
-  position:absolute;
-  top:12px; right:14px;
-  z-index:5;
-  font-family:var(--font-mono);
-  font-size:0.62rem;
-  letter-spacing:0.04em;
-  color:var(--white);
-  background:rgba(5,5,5,0.5);
-  padding:3px 8px;
-  border-radius:100px;
-  font-variant-numeric:tabular-nums;
-}
 .hero__float--1{
   width:66%;
   aspect-ratio:4/5;
@@ -624,16 +576,12 @@ html.lenis, html.lenis body{ height:auto; }
   inset:0;
   border-radius:inherit;
   box-shadow:inset 0 0 0 0 transparent;
-  background:linear-gradient(115deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 60%);
-  background-size:250% 250%;
-  background-position:120% 0;
-  transition:box-shadow .4s var(--ease-out), background-position .7s var(--ease-out);
+  transition:box-shadow .4s var(--ease-out);
   pointer-events:none;
   z-index:4;
 }
 .tile:hover::after, .tile:focus-visible::after{
   box-shadow:inset 0 0 0 1px var(--accent);
-  background-position:-20% 0;
 }
 .tile figcaption{
   position:absolute;
@@ -649,20 +597,6 @@ html.lenis, html.lenis body{ height:auto; }
   color:var(--white);
   z-index:3;
 }
-.tile__tc{
-  position:absolute;
-  right:12px; top:12px;
-  z-index:3;
-  font-family:var(--font-mono);
-  font-size:0.6rem;
-  letter-spacing:0.03em;
-  color:rgba(242,242,242,0.75);
-  background:rgba(5,5,5,0.5);
-  padding:3px 8px;
-  border-radius:100px;
-  font-variant-numeric:tabular-nums;
-}
-
 .tile__ph{
   width:100%; height:100%;
   position:relative;
@@ -786,8 +720,6 @@ html.lenis, html.lenis body{ height:auto; }
   display:flex;
   align-items:center;
   justify-content:center;
-  transform:scale(0.94);
-  transition:transform .4s var(--ease-out);
   box-shadow:0 0 0 1px rgba(242,242,242,0.08), 0 40px 90px rgba(0,0,0,0.6);
 }
 .lightbox__stage.has-photo{
@@ -795,7 +727,6 @@ html.lenis, html.lenis body{ height:auto; }
   aspect-ratio:auto;
   max-width:92vw;
 }
-.lightbox.is-open .lightbox__stage{ transform:scale(1); }
 .lightbox__ph{
   position:relative;
   width:100%; height:100%;

@@ -290,12 +290,6 @@ function renderGallery(items){
       });
     }
 
-    const tc = document.createElement('span');
-    tc.className = 'tile__tc';
-    tc.setAttribute('aria-hidden', 'true');
-    tc.textContent = fakeTimecode(i);
-    tile.appendChild(tc);
-
     if (item.caption){
       const caption = document.createElement('figcaption');
       caption.textContent = item.caption;
@@ -325,16 +319,6 @@ function renderGallery(items){
   }
 
   window.__relayoutGallery && window.__relayoutGallery();
-}
-
-// Purely decorative per-tile timecode stamp — deterministic from the
-// item's position, not a real clock.
-function fakeTimecode(i){
-  const h = String(Math.floor(i / 60) % 24).padStart(2, '0');
-  const m = String((i * 7) % 60).padStart(2, '0');
-  const s = String((i * 13) % 60).padStart(2, '0');
-  const f = String((i * 5) % 30).padStart(2, '0');
-  return `TC ${h}:${m}:${s}:${f}`;
 }
 
 // Reel tiles: point the muted <video> at the uploaded file and give it
@@ -379,24 +363,6 @@ const reelObserver = new IntersectionObserver((entries) => {
     else video.pause();
   });
 }, { threshold: 0.5 });
-
-// --------------------------------------------
-// Camcorder HUD: running timecode since page load.
-// --------------------------------------------
-(function hudTimecode(){
-  const el = document.getElementById('hudTime');
-  if (!el) return;
-  const start = Date.now();
-  function tick(){
-    const elapsed = Math.floor((Date.now() - start) / 1000);
-    const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
-    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
-    const s = String(elapsed % 60).padStart(2, '0');
-    el.textContent = `${h}:${m}:${s}`;
-  }
-  tick();
-  setInterval(tick, 1000);
-})();
 
 // --------------------------------------------
 // Gallery masonry: both the column span (width) and row span (height)
