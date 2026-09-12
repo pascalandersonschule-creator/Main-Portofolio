@@ -127,26 +127,6 @@ body::before{
 }
 
 /* ============================================
-   Scanline overlay — CRT / VHS texture, kept subtle
-   ============================================ */
-.scanlines{
-  position:fixed; inset:0;
-  z-index:998;
-  pointer-events:none;
-  opacity:0.035;
-  mix-blend-mode:overlay;
-  background-image:repeating-linear-gradient(to bottom, rgba(255,255,255,0.9) 0px, rgba(255,255,255,0.9) 1px, transparent 1px, transparent 3px);
-  animation:scan-drift 9s linear infinite;
-}
-@keyframes scan-drift{
-  0%{ background-position:0 0; }
-  100%{ background-position:0 120px; }
-}
-@media (prefers-reduced-motion: reduce){
-  .scanlines{ animation:none; }
-}
-
-/* ============================================
    Cursor orb — desktop only; disabled for touch & reduced-motion
    ============================================ */
 .cursor-orb{
@@ -445,39 +425,16 @@ html.lenis, html.lenis body{ height:auto; }
   box-shadow:0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(242,242,242,0.06);
 }
 .hero__float .tile__ph{ width:100%; height:100%; }
-.hero__float::before, .hero__float::after{
-  content:'';
-  position:absolute;
-  width:18px; height:18px;
-  z-index:4;
-  pointer-events:none;
-  border-color:var(--accent);
-}
-.hero__float::before{ top:10px; left:10px; border-top:1.5px solid var(--accent); border-left:1.5px solid var(--accent); opacity:0.9; }
-.hero__float::after{ bottom:10px; right:10px; border-bottom:1.5px solid var(--accent); border-right:1.5px solid var(--accent); opacity:0.9; }
 .hero__float--1{
   width:66%;
   aspect-ratio:4/5;
   top:0; right:0;
-  animation:float-1 7s ease-in-out infinite;
 }
 .hero__float--2{
   width:46%;
   aspect-ratio:4/5;
   bottom:0; left:0;
   z-index:2;
-  animation:float-2 8s ease-in-out infinite;
-}
-@keyframes float-1{
-  0%, 100%{ transform:translateY(0); }
-  50%{ transform:translateY(-12px); }
-}
-@keyframes float-2{
-  0%, 100%{ transform:translateY(0); }
-  50%{ transform:translateY(8px); }
-}
-@media (prefers-reduced-motion: reduce){
-  .hero__float--1, .hero__float--2{ animation:none; }
 }
 
 @media (max-width:960px){
@@ -777,15 +734,6 @@ html.lenis, html.lenis body{ height:auto; }
   align-items:center;
 }
 .about__media{ position:relative; aspect-ratio:4/5; border-radius:var(--radius-lg); overflow:hidden; box-shadow:0 0 0 1px rgba(242,242,242,0.06); }
-.about__media::before, .about__media::after{
-  content:'';
-  position:absolute;
-  width:18px; height:18px;
-  z-index:4;
-  pointer-events:none;
-}
-.about__media::before{ top:10px; left:10px; border-top:1.5px solid var(--accent); border-left:1.5px solid var(--accent); opacity:0.9; }
-.about__media::after{ bottom:10px; right:10px; border-bottom:1.5px solid var(--accent); border-right:1.5px solid var(--accent); opacity:0.9; }
 .about__lead{
   color:var(--white) !important;
   font-size:1.1rem;
