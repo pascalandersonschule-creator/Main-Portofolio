@@ -341,6 +341,17 @@ html.lenis, html.lenis body{ height:auto; }
   overflow:hidden;
   color:var(--white);
 }
+/* SplitType (character-stagger reveal, see initHeroReveal in script.js)
+   normally sets display:inline-block on each .char/.word span itself via
+   an inline style attribute — but the site's CSP has no 'unsafe-inline'
+   in style-src, so the browser silently blocks that and every character
+   renders as its default block-level <div>, stacking vertically instead
+   of flowing as text. Declaring the same rule here, as a real stylesheet
+   rule, achieves the same layout without weakening the CSP. */
+.hero__line .word,
+.hero__line .char{
+  display:inline-block;
+}
 
 .hero__sub{
   margin-top:34px;
