@@ -2,7 +2,7 @@
   "hero": {
     "sub": "Concert photography, portraits and cover art — shot for artists who don’t wait for permission.",
     "ctaSecondary": "Book a session",
-    "float2Image": "/uploads/dsc07390.jpg",
+    "float2Image": "/uploads/dsc05645.jpg",
     "float1Image": "/uploads/dsc05750-edit-2.jpg",
     "ctaPrimary": "View the work",
     "tags": "Self-taught, Kiel DE, Booking open",
@@ -17,7 +17,7 @@
     },
     {
       "type": "covers",
-      "caption": "Vol. 3 Mixtape",
+      "caption": "",
       "image": "/uploads/dsc07367.jpg"
     },
     {
@@ -55,7 +55,7 @@
     },
     {
       "type": "covers",
-      "caption": "Midnight EP",
+      "caption": "",
       "image": "/uploads/dsc07388.jpg"
     },
     {
@@ -64,17 +64,17 @@
     },
     {
       "type": "night",
-      "caption": "After Hours",
+      "caption": "",
       "image": ""
     },
     {
       "type": "night",
-      "caption": "Backstage",
+      "caption": "",
       "image": ""
     },
     {
       "type": "motion",
-      "caption": "Encore",
+      "caption": "",
       "video": "",
       "poster": ""
     }
