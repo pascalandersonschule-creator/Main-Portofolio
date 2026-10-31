@@ -80,19 +80,23 @@
     },
     {
       "type": "stage",
-      "image": "/uploads/dsc08032.jpg"
+      "image": "/uploads/dsc08032.jpg",
+      "caption": "Botticelli Baby Tour 2026"
     },
     {
       "type": "stage",
-      "image": "/uploads/dsc07971-edit-2.jpg"
+      "image": "/uploads/dsc07971-edit-2.jpg",
+      "caption": "Botticelli Baby Tour 2026"
     },
     {
       "type": "stage",
-      "image": "/uploads/dsc08063.jpg"
+      "image": "/uploads/dsc08063.jpg",
+      "caption": "Botticelli Baby Tour 2026"
     },
     {
       "type": "stage",
-      "image": "/uploads/dsc08194.jpg"
+      "image": "/uploads/dsc08194.jpg",
+      "caption": "Botticelli Baby Tour 2026"
     }
   ],
   "about": {
