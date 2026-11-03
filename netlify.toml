@@ -7,6 +7,74 @@
 [build]
   publish = "."
 
+# Client download portal. All client data (names, expiry dates, photos)
+# lives in Cloudflare R2, not in git — creating a client or uploading
+# photos never commits anything and never triggers a deploy.
+[functions]
+  node_bundler = "esbuild"
+
+# Daily cleanup: deletes expired client deliveries from R2.
+[functions."client-portal-cleanup"]
+  schedule = "@daily"
+
+# publish = "." deploys the whole repo root, so function source, package
+# files and internal project docs are answered with a 404 instead of
+# being served. (admin/config.yml stays reachable on purpose: Decap CMS
+# loads it in the browser. It contains no secrets.)
+
+[[redirects]]
+  from = "/CLAUDE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/SETUP-GUIDE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/DESIGN.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/Web Interface Guidelines.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.claude/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/uploads/dsc02240"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package-lock.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
 # Security headers — applied to every page.
 # CSP is intentionally strict on the public site: every vendor library
 # (GSAP, Lucide, Lenis, SplitType, same as the fonts) is self-hosted from
@@ -40,13 +108,25 @@
 # CMS fails to load at all with an EvalError), and talks to Git Gateway/
 # GitHub to save content. Only Identity remains as an external script
 # host, for the same login reason as above.
+#
+# connect-src needs blob: — not just img-src/media-src. On upload, Decap
+# wraps the picked file in a blob: URL and fetch()es it straight back to
+# base64-encode it for the Git Gateway commit (AssetProxy.toBase64()).
+# 'self' does NOT cover blob: in CSP, so without it listed here that
+# fetch is refused and the upload dies with a bare "Failed to fetch" —
+# login, editing and browsing existing media all keep working, since
+# those only ever put a blob: URL in an <img src>, never fetch() one.
 [[headers]]
   for = "/admin/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' blob: https://api.netlify.com https://identity.netlify.com https://api.github.com https://*.githubusercontent.com http://localhost:8081 http://127.0.0.1:8081; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    # Never cache the editor shell, never index it (robots.txt alone is
+    # only a request — this header is what search engines actually obey).
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+    Content-Security-Policy = "frame-ancestors 'self'; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self' data:; connect-src 'self' blob: https://*.r2.cloudflarestorage.com https://api.netlify.com https://identity.netlify.com https://api.github.com https://*.githubusercontent.com http://localhost:8081 http://127.0.0.1:8081; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
 
 # Uploaded photos rarely change once published — cache them hard.
 # (Decap CMS always uploads under a new filename, so this is safe:
@@ -67,3 +147,29 @@
   for = "/*.js"
   [headers.values]
     Cache-Control = "public, max-age=3600"
+
+# Client download page: the client ID sits in the URL, so never send it
+# anywhere as a Referer and never cache the page or the function answer.
+[[headers]]
+  for = "/download.html"
+  [headers.values]
+    Referrer-Policy = "no-referrer"
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store"
+
+# Client admin page: the page that can create clients and upload files
+# gets a much stricter policy than the rest of /admin (no 'unsafe-eval',
+# no inline scripts — those exist only for Decap CMS). Netlify sends this
+# IN ADDITION to the /admin/* policy; browsers enforce both, so the
+# stricter rules win. 'unsafe-inline' styles are needed by the Netlify
+# Identity login popup.
+[[headers]]
+  for = "/admin/kunden.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; script-src 'self' https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.r2.cloudflarestorage.com; frame-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
+    Cache-Control = "no-store"

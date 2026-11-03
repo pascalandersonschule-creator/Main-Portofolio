@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Deine Bilder — Pascal Anderson</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="vignette" aria-hidden="true"></div>
+
+<header class="nav">
+  <a href="index.html#top" class="nav__logo">Pascal Anderson</a>
+</header>
+
+<main class="legal portal">
+  <div class="legal__inner">
+    <p class="portal__eyebrow">Client delivery</p>
+    <h1 class="legal__title" id="portalTitle">Deine Bilder</h1>
+    <p class="legal__intro" id="portalIntro">Einen Moment — deine Dateien werden geladen …</p>
+
+    <p class="portal__note" id="portalNote" hidden></p>
+
+    <div class="portal__error" id="portalError" role="alert" hidden>
+      <h2 class="portal__error-title" id="portalErrorTitle"></h2>
+      <p id="portalErrorText"></p>
+    </div>
+
+    <ol class="portal__list" id="portalList" aria-live="polite" hidden></ol>
+
+    <p class="portal__meta" id="portalMeta" hidden></p>
+  </div>
+</main>
+
+<footer class="footer">
+  <span>© <span id="year"></span> Pascal Anderson</span>
+  <div class="footer__links">
+    <a href="index.html">Back to site</a>
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+  </div>
+</footer>
+
+<script src="download.js"></script>
+</body>
+</html>

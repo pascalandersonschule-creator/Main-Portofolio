@@ -1,6 +1,10 @@
 // Fills in the Impressum/Datenschutz identity fields (name, address,
 // phone, VAT ID) from content.json's "legal" section, so Pascal can
 // edit them via /admin instead of touching this HTML directly.
+// The real values are ALSO written statically into the HTML, so the
+// legally required Impressum is complete even without JavaScript (and
+// for crawlers/Abmahn-bots that don't run JS). If you change name or
+// address in /admin, update impressum.html + datenschutz.html too.
 (function () {
   const setAll = (selector, value) => {
     document.querySelectorAll(selector).forEach((el) => { el.textContent = value; });
@@ -27,6 +31,7 @@
       if (phoneLine) {
         if (legal.phone) {
           phoneLine.querySelector('[data-legal="phone"]').textContent = legal.phone;
+          phoneLine.hidden = false;
         } else {
           phoneLine.remove();
         }
@@ -36,6 +41,7 @@
       if (vatSection) {
         if (legal.vatId) {
           vatSection.querySelector('[data-legal="vatId"]').textContent = legal.vatId;
+          vatSection.hidden = false;
         } else {
           vatSection.remove();
         }
