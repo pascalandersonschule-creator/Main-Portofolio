@@ -5,28 +5,17 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // --------------------------------------------
-// External-provider logins (Google/GitHub) also land on "/" — with
-// #access_token=… (or #error=… if refused) in the URL. The token is
-// stripped from the address bar as soon as the widget has consumed it,
-// and the editor is sent back to the admin page they started from.
+// Netlify Identity — loaded ONLY when this page was opened via one of
+// Netlify's own invite/recovery/confirmation links, or as the return
+// from a Google/GitHub login (#access_token=… / #error=…). On a normal
+// visit nothing is loaded and no request reaches identity.netlify.com.
+// The token is removed from the address bar as soon as the widget has
+// consumed it, and the editor is sent back to the admin page they
+// started from (allow-listed — never an arbitrary redirect target).
+// --------------------------------------------
 (function loadIdentityIfNeeded(){
   const hash = window.location.hash;
   const isEmailLink = /(invite|recovery|confirmation|email_change)_token=/.test(hash);
-  const isProviderCallback = /(^#|&)(access_token|error)=/.test(hash);
-  if (!isEmailLink && !isProviderCallback) return;
-
-  const RETURN_TARGETS = ['/admin/', '/admin/kunden.html'];
-  let returnTo = '/admin/';
-  try {
-    const saved = sessionStorage.getItem('identityReturnTo');
-
-// External-provider logins (Google/GitHub) also land on "/" — with
-// #access_token=… (or #error=… if refused) in the URL. The token is
-// stripped from the address bar as soon as the widget has consumed it,
-// and the editor is sent back to the admin page they started from.
-(function loadIdentityIfNeeded(){
-  const hash = window.location.hash;
-  const isEmailLink =/(invite|recovery|confirmation|email_change)_token=/.test(hash);
   const isProviderCallback = /(^#|&)(access_token|error)=/.test(hash);
   if (!isEmailLink && !isProviderCallback) return;
 
@@ -38,7 +27,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     sessionStorage.removeItem('identityReturnTo');
   } catch (e) { /* storage blocked — default target */ }
 
-  const stripHash = () => history.replaceState(null, '', location.pathname +location.search);
+  const stripHash = () => history.replaceState(null, '', location.pathname + location.search);
   const goBack = () => { stripHash(); document.location.replace(returnTo); };
 
   // Safety net: never leave a token in the address bar.
@@ -60,19 +49,6 @@ document.getElementById('year').textContent = new Date().getFullYear();
   };
   document.head.appendChild(script);
 })();
-
-2. In admin/kunden.js diese Zeile:
-
-  $('loginBtn').addEventListener('click', () => netlifyIdentity.open('login'));
-
-durch diese ersetzen:
-
-  $('loginBtn').addEventListener('click', () => {
-    // A Google/GitHub login returns to "/" — script.js reads this to send
-    // you back here instead of to the CMS. Tab-scoped, not tracking.
-    try { sessionStorage.setItem('identityReturnTo', '/admin/kunden.html'); } catch (e) { /* ignore */ }
-    netlifyIdentity.open('login');
-  });
 
 // --------------------------------------------
 // Content loader — pulls text & images from content.json
