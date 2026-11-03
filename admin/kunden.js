@@ -233,7 +233,12 @@
   });
 
   $('refreshBtn').addEventListener('click', () => loadClients());
-  $('loginBtn').addEventListener('click', () => netlifyIdentity.open('login'));
+    $('loginBtn').addEventListener('click', () => {
+    // A Google/GitHub login returns to "/" — script.js reads this to send
+    // you back here instead of to the CMS. Tab-scoped, not tracking.
+    try { sessionStorage.setItem('identityReturnTo', '/admin/kunden.html'); } catch (e) { /* ignore */ }
+    netlifyIdentity.open('login');
+  });
   $('logoutBtn').addEventListener('click', () => netlifyIdentity.logout());
 
   // ---------- auth ----------
