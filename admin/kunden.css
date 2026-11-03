@@ -1,0 +1,68 @@
+/* Admin-only page — plain, functional, matches the site's dark palette.
+   Uses the self-hosted Space Grotesk/Mono, no external fonts. */
+@font-face{ font-family:'Space Grotesk'; src:url('/fonts/SpaceGrotesk-Variable.woff2') format('woff2'); font-weight:300 700; font-display:swap; }
+@font-face{ font-family:'Space Mono'; src:url('/fonts/SpaceMono-Regular.woff2') format('woff2'); font-display:swap; }
+
+:root{
+  --bg:#050505; --panel:#0e0e0f; --line:rgba(242,242,242,0.09); --line-strong:rgba(242,242,242,0.18);
+  --text:#f2f2f2; --muted:#8a8a8d; --accent:#ff2ec4; --danger:#ff4d5e;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:dark;
+}
+*{ box-sizing:border-box; margin:0; }
+body{ background:var(--bg); color:var(--text); font:15px/1.5 'Space Grotesk', system-ui, sans-serif; padding:0 clamp(16px, 4vw, 48px) 80px; }
+h1{ font-size:clamp(1.6rem, 4vw, 2.2rem); font-weight:600; letter-spacing:-0.02em; }
+h2{ font-size:1rem; font-weight:600; margin-bottom:16px; }
+a{ color:var(--text); }
+
+.k-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; padding:40px 0 32px; border-bottom:1px solid var(--line); max-width:960px; margin:0 auto; }
+.k-head__nav{ display:flex; gap:20px; align-items:center; font-size:0.85rem; }
+.k-eyebrow{ font:0.7rem 'Space Mono', monospace; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.k-main{ max-width:960px; margin:0 auto; }
+.k-panel{ padding:32px 0; border-bottom:1px solid var(--line); }
+.k-row-head{ display:flex; justify-content:space-between; align-items:center; }
+.k-row-head h2{ margin:0; }
+
+.k-form{ display:grid; grid-template-columns:2fr 1fr; gap:16px; align-items:end; }
+.k-form label{ display:grid; gap:6px; font-size:0.8rem; color:var(--muted); }
+.k-form__wide{ grid-column:1 / -1; }
+.k-form button{ justify-self:start; }
+input, textarea{ font:inherit; color:var(--text); background:var(--panel); border:1px solid var(--line-strong); border-radius:6px; padding:10px 12px; width:100%; transition:border-color .4s var(--ease); }
+input:focus, textarea:focus{ outline:none; border-color:var(--accent); }
+.k-hint, .k-muted{ color:var(--muted); font-size:0.8rem; }
+.k-hint{ margin-top:12px; }
+.k-status{ color:var(--muted); font-size:0.85rem; margin-top:12px; }
+.k-error{ color:var(--danger); font-size:0.8rem; }
+
+.k-btn{ font:0.78rem 'Space Mono', monospace; letter-spacing:0.03em; padding:10px 16px; border-radius:6px; border:1px solid var(--text); background:var(--text); color:var(--bg); cursor:pointer; transition:border-color .4s var(--ease), color .4s var(--ease), background-color .4s var(--ease), opacity .4s var(--ease); }
+.k-btn:hover{ background:var(--accent); border-color:var(--accent); }
+.k-btn:disabled{ opacity:.5; cursor:wait; }
+.k-btn--ghost{ background:transparent; color:var(--text); border-color:var(--line-strong); }
+.k-btn--ghost:hover{ background:transparent; color:var(--accent); border-color:var(--accent); }
+.k-btn--danger{ background:transparent; color:var(--danger); border-color:rgba(255,77,94,0.35); }
+.k-btn--danger:hover{ background:transparent; color:var(--danger); border-color:var(--danger); }
+.k-link-btn{ background:none; border:0; color:var(--muted); font:inherit; font-size:0.8rem; text-decoration:underline; cursor:pointer; }
+.k-link-btn:hover{ color:var(--danger); }
+button:focus-visible, a:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+.k-clients{ list-style:none; padding:0; margin-top:16px; border-top:1px solid var(--line); }
+.k-client{ border-bottom:1px solid var(--line); }
+.k-client__row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:18px 0; }
+.k-client__info{ display:grid; gap:2px; }
+.k-client__actions{ display:flex; gap:8px; flex-wrap:wrap; }
+.k-client__details{ padding:0 0 24px; display:grid; gap:16px; }
+.k-client__details[hidden]{ display:none; }
+.k-client__details > label{ display:grid; gap:6px; }
+.k-link{ font:0.78rem 'Space Mono', monospace; }
+.k-drop{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:16px; border:1px dashed var(--line-strong); border-radius:6px; }
+.k-file-input{ width:auto; border:0; padding:0; background:none; }
+
+.k-files, .k-progress{ list-style:none; padding:0; display:grid; gap:6px; }
+.k-files li, .k-progress li{ display:grid; grid-template-columns:1fr auto auto; gap:16px; align-items:center; font-size:0.85rem; overflow-wrap:anywhere; }
+.k-progress progress{ width:140px; accent-color:var(--accent); }
+
+@media (max-width:600px){
+  .k-form{ grid-template-columns:1fr; }
+  .k-files li, .k-progress li{ grid-template-columns:1fr auto; }
+  .k-progress progress{ grid-column:1 / -1; width:100%; }
+}

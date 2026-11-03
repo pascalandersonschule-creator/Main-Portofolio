@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Kunden-Downloads — Pascal Anderson</title>
+<link rel="stylesheet" href="kunden.css">
+</head>
+<body>
+<header class="k-head">
+  <div>
+    <p class="k-eyebrow">Admin</p>
+    <h1>Kunden-Downloads</h1>
+  </div>
+  <nav class="k-head__nav">
+    <a href="/admin/">← Website-Inhalte</a>
+    <button type="button" id="logoutBtn" class="k-btn k-btn--ghost" hidden>Abmelden</button>
+  </nav>
+</header>
+
+<main class="k-main">
+  <section id="loginView" class="k-panel" hidden>
+    <p>Bitte melde dich mit deinem CMS-Zugang an.</p>
+    <button type="button" id="loginBtn" class="k-btn">Anmelden</button>
+  </section>
+
+  <div id="appView" hidden>
+    <section class="k-panel">
+      <h2>Neuer Kunde</h2>
+      <form id="createForm" class="k-form" autocomplete="off">
+        <label>Kundenname
+          <input name="title" required maxlength="120" placeholder="z. B. Anna & Tom — Hochzeit">
+        </label>
+        <label>Gültig bis
+          <input name="expiryDate" type="date" required>
+        </label>
+        <label class="k-form__wide">Hinweistext (optional)
+          <textarea name="note" rows="2" maxlength="1000" placeholder="Wird über der Dateiliste angezeigt."></textarea>
+        </label>
+        <button type="submit" class="k-btn">Kunden anlegen</button>
+      </form>
+      <p class="k-hint" id="expiryHint"></p>
+    </section>
+
+    <section class="k-panel">
+      <div class="k-row-head">
+        <h2>Kunden</h2>
+        <button type="button" id="refreshBtn" class="k-btn k-btn--ghost">Aktualisieren</button>
+      </div>
+      <p class="k-status" id="listStatus" role="status"></p>
+      <ul class="k-clients" id="clientList"></ul>
+    </section>
+  </div>
+</main>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="kunden.js"></script>
+</body>
+</html>
