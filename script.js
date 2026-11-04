@@ -527,9 +527,7 @@ const reelObserver = new IntersectionObserver((entries) => {
   // sideways instead of just wrapping.
   function colSpanFor(ratio, index){
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-    // Mobile rhythm: every 5th photo runs full width, so the two-column
-    // grid doesn't read as a uniform wall on a phone.
-    if (isMobile) return ratio > 1.2 || index % 5 === 0 ? 2 : 1;
+    if (isMobile) return ratio > 1.2 ? 2 : 1;
     if (ratio > 2.0) return 6;
     if (ratio > 1.6) return 4;
     if (ratio > 1.2) return 3;
