@@ -85,12 +85,15 @@ collections:
                 widget: "image"
                 required: false
 
-          - label: "2. Gallery"
+          - label: "2. Selected work (best shots)"
             name: "gallery"
             widget: "list"
             collapsed: true
             summary: "{{fields.type}} — {{fields.caption}}"
             hint: >-
+              Your strongest single images — the first thing people see in
+              the Work section. Keep it tight (around 9–15). Complete concerts
+              go into "3. Shows" below instead.
               Every tile in the Work section, in the order they'll appear.
               Drag the ☰ handle on a collapsed entry to reorder it. Add as many
               as you like with "Add gallery" below, or remove one with the ✕.
@@ -104,6 +107,7 @@ collections:
                 options:
                   - { label: "Stage", value: "stage" }
                   - { label: "Night", value: "night" }
+                  - { label: "Portraits", value: "portraits" }
                   - { label: "Covers", value: "covers" }
                   - { label: "Motion", value: "motion" }
                 hint: "Just decides which fields below apply — Stage/Night/Covers use Photo, Motion uses Video. Upload photos in whatever aspect ratio they actually are (square, 3:4, 4:5, landscape...) — the gallery sizes each tile to match, no cropping to a fixed shape."
@@ -128,7 +132,59 @@ collections:
                 required: false
                 hint: "Only for Motion tiles — the still image shown before the video starts playing."
 
-          - label: "3. About"
+          - label: "3. Shows"
+            name: "shows"
+            widget: "list"
+            collapsed: true
+            summary: "{{fields.artist}} — {{fields.venue}} {{fields.date}}"
+            hint: >-
+              One entry per concert. On the main page every show appears as a
+              card (cover photo + name); clicking it opens that show's own
+              gallery page. Shows are sorted by date, newest first. A show only
+              appears once it has a name and at least one photo.
+            fields:
+              - label: "Artist / Band"
+                name: "artist"
+                widget: "string"
+              - label: "Venue or event (optional)"
+                name: "venue"
+                widget: "string"
+                required: false
+                hint: "e.g. \"Pumpe\" or \"Kieler Woche\""
+              - label: "City (optional)"
+                name: "city"
+                widget: "string"
+                required: false
+              - label: "Date"
+                name: "date"
+                widget: "datetime"
+                format: "YYYY-MM-DD"
+                date_format: "DD.MM.YYYY"
+                time_format: false
+                required: false
+                hint: "Used for sorting and shown on the card. Changing the date or the artist name changes the show's link."
+              - label: "Cover photo (optional)"
+                name: "cover"
+                widget: "image"
+                required: false
+                hint: "The preview image on the main page. Leave empty and the first photo below is used."
+              - label: "Short text (optional)"
+                name: "text"
+                widget: "text"
+                required: false
+                hint: "One or two sentences shown at the top of the show page."
+              - label: "Photos"
+                name: "photos"
+                widget: "list"
+                collapsed: true
+                summary: "{{fields.image}}"
+                hint: "Add one photo per entry. Drag the ☰ handle to change the order."
+                field:
+                  label: "Photo"
+                  name: "image"
+                  widget: "image"
+
+          - label: "4. About"
             name: "about"
             widget: "object"
             collapsed: true
@@ -139,7 +195,7 @@ collections:
                 widget: "image"
                 required: false
 
-          - label: "4. Contact"
+          - label: "5. Contact"
             name: "contact"
             widget: "object"
             collapsed: true
@@ -150,7 +206,7 @@ collections:
                 widget: "string"
                 hint: "Where the contact form's fallback (if Netlify Forms is ever unreachable) opens the visitor's mail app to."
 
-          - label: "5. Footer"
+          - label: "6. Footer"
             name: "footer"
             widget: "object"
             collapsed: true
@@ -170,7 +226,7 @@ collections:
                 widget: "string"
                 hint: "Usually just \"datenschutz.html\" — only change this if you renamed that file."
 
-          - label: "6. Legal (Impressum & Datenschutz)"
+          - label: "7. Legal (Impressum & Datenschutz)"
             name: "legal"
             widget: "object"
             collapsed: true
@@ -209,7 +265,7 @@ collections:
                 required: false
                 hint: "e.g. \"7. September 2026\" — shown as the \"Stand:\" date."
 
-          - label: "7. Personal Work page"
+          - label: "8. Personal Work page"
             name: "personalWork"
             widget: "object"
             collapsed: true
