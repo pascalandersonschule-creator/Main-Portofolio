@@ -31,7 +31,7 @@
 <link rel="preload" href="fonts/SpaceGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/SpaceMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/styles.css?v=3">
 </head>
 <body>
 
@@ -50,6 +50,7 @@
   <a href="#top" class="nav__logo">Pascal Anderson</a>
   <nav class="nav__links">
     <a href="#work">Work</a>
+    <a href="#shows">Shows</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -120,6 +121,17 @@
   <div class="gallery" id="gallery"></div>
 </section>
 
+<!-- SHOWS — one card per concert, rendered by script.js from
+     content.json ("3. Shows" in /admin). A card links to that show's
+     own gallery page (/show?s=…). Stays hidden until there's a show. -->
+<section class="shows" id="shows" hidden>
+  <div class="shows__head">
+    <h2 class="section-title">Shows</h2>
+    <p class="shows__intro">Full sets, one night at a time.</p>
+  </div>
+  <div class="shows__grid" id="showsGrid"></div>
+</section>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" aria-hidden="true">
   <button class="lightbox__close" id="lightboxClose" aria-label="Close">Close <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
@@ -178,7 +190,7 @@
       <div class="field field--full field--consent">
         <label class="checkbox">
           <input type="checkbox" id="consent" name="consent" required>
-          <span lang="de">Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung dieser Anfrage einverstanden. *</span>
+          <span lang="de">Ich habe die <a href="/datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung dieser Anfrage einverstanden. *</span>
         </label>
       </div>
       <button type="submit" class="btn btn--primary">Send message</button>
@@ -190,12 +202,12 @@
 
 <footer class="footer">
   <span>© <span id="year"></span> Pascal Anderson</span>
-  <a href="personal.html" class="footer__personal">Personal Work</a>
+  <a href="/personal" class="footer__personal">Personal Work</a>
   <div class="footer__links">
     <a href="mailto:hello@pascalanderson.com" id="footerEmail">hello@pascalanderson.com</a>
     <a href="#" target="_blank" rel="noopener" id="footerInstagram"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg> Instagram</a>
-    <a href="impressum.html" id="footerImpressum">Impressum</a>
-    <a href="datenschutz.html" id="footerDatenschutz">Datenschutz</a>
+    <a href="/impressum" id="footerImpressum">Impressum</a>
+    <a href="/datenschutz" id="footerDatenschutz">Datenschutz</a>
   </div>
 </footer>
 
@@ -215,6 +227,6 @@
 <!-- SplitType (splits the hero headline into characters for a GSAP stagger reveal) -->
 <script src="vendor/split-type.min.js"></script>
 
-<script src="script.js"></script>
+<script src="/script.js?v=3"></script>
 </body>
 </html>

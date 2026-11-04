@@ -1,3 +1,10 @@
+// Clean address bar: /impressum instead of /impressum.html. Netlify serves
+// both, so this only changes what's displayed — no reload, no redirect.
+if (/\.html$/.test(location.pathname)) {
+  const clean = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+  history.replaceState(null, '', clean + location.search + location.hash);
+}
+
 // Personal Work — a small, separate gallery outside the main portfolio.
 // Deliberately independent from script.js: no category filters, no
 // video tiles, no hero/contact-form logic. Just fetch, render, masonry,
@@ -76,6 +83,8 @@
 
       gallery.appendChild(tile);
     });
+    // .tile starts transparent (scroll-reveal on the main page) — show them.
+    gallery.querySelectorAll('.tile').forEach((t) => t.classList.add('is-revealed'));
     layout();
   }
 

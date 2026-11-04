@@ -1,3 +1,10 @@
+// Clean address bar: /impressum instead of /impressum.html. Netlify serves
+// both, so this only changes what's displayed — no reload, no redirect.
+if (/\.html$/.test(location.pathname)) {
+  const clean = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+  history.replaceState(null, '', clean + location.search + location.hash);
+}
+
 // ============================================
 // PASCAL ANDERSON — PHOTOGRAPHY
 // ============================================
@@ -140,6 +147,10 @@ function applyContent(data){
 
   if (Array.isArray(data.gallery)){
     renderGallery(data.gallery);
+  }
+
+  if (Array.isArray(data.shows)){
+    renderShows(data.shows);
   }
 
   if (data.about){
@@ -336,7 +347,109 @@ function renderGallery(items){
     gallery.querySelectorAll('.tile').forEach((tile) => tileRevealObserver.observe(tile));
   }
 
+  // Filters only for categories that actually have tiles — no button
+  // that leads to an empty grid. With a single category there's
+  // nothing to filter, so the whole row is hidden.
+  const used = new Set(Array.from(gallery.querySelectorAll('.tile')).map((t) => t.dataset.category));
+  const filterButtons = document.querySelectorAll('.filter');
+  filterButtons.forEach((btn) => {
+    btn.hidden = btn.dataset.filter !== 'all' && !used.has(btn.dataset.filter);
+  });
+  const filterRow = document.querySelector('.filters');
+  if (filterRow) filterRow.hidden = used.size < 2;
+
   window.__relayoutGallery && window.__relayoutGallery();
+}
+
+// --------------------------------------------
+// Shows: one card per concert (cover + artist + venue/date). The card
+// links to /show?s=<slug>, where show.js renders that concert's own
+// gallery. The slug is derived from artist + date, the same way in
+// show.js — keep both in sync.
+// --------------------------------------------
+function showSlug(show){
+  const base = `${show.artist || ''} ${show.date || ''}`
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/ß/g, 'ss')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return base || 'show';
+}
+
+function formatShowDate(iso){
+  if (!iso || !/^\d{4}-\d{2}-\d{2}/.test(iso)) return '';
+  const d = new Date(`${iso.slice(0, 10)}T12:00:00Z`);
+  return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function renderShows(shows){
+  const section = document.getElementById('shows');
+  const grid = document.getElementById('showsGrid');
+  if (!section || !grid) return;
+
+  const list = shows
+    .filter((sh) => sh && sh.artist && Array.isArray(sh.photos) && sh.photos.some(Boolean))
+    .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+
+  grid.innerHTML = '';
+  section.hidden = list.length === 0;
+
+  list.forEach((sh, i) => {
+    const photos = sh.photos.filter(Boolean);
+    const card = document.createElement('a');
+    card.className = 'show-card';
+    card.href = `/show?s=${encodeURIComponent(showSlug(sh))}`;
+
+    const media = document.createElement('div');
+    media.className = `show-card__media tile__ph--${(i % 9) + 1}`;
+    const img = document.createElement('img');
+    img.className = 'show-card__img';
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    const cover = sh.cover || photos[0];
+    const widths = [500, 800, 1100];
+    img.sizes = '(max-width: 600px) 92vw, (max-width: 1000px) 46vw, 31vw';
+    img.srcset = widths.map((w) => `${netlifyImageUrl(cover, w)} ${w}w`).join(', ');
+    img.src = netlifyImageUrl(cover, 800);
+    img.addEventListener('error', () => {
+      img.removeAttribute('srcset');
+      img.removeAttribute('sizes');
+      img.src = cover;
+    }, { once: true });
+    img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+    media.appendChild(img);
+
+    const count = document.createElement('span');
+    count.className = 'show-card__count';
+    count.textContent = `${photos.length} ${photos.length === 1 ? 'photo' : 'photos'}`;
+    media.appendChild(count);
+
+    const body = document.createElement('div');
+    body.className = 'show-card__body';
+    const title = document.createElement('h3');
+    title.className = 'show-card__title';
+    title.textContent = sh.artist;
+    const meta = document.createElement('p');
+    meta.className = 'show-card__meta';
+    meta.textContent = [[sh.venue, sh.city].filter(Boolean).join(', '), formatShowDate(sh.date)].filter(Boolean).join(' — ');
+    body.append(title, meta);
+
+    card.append(media, body);
+    grid.appendChild(card);
+  });
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const obs = new IntersectionObserver((entries, o) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-revealed');
+        o.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    grid.querySelectorAll('.show-card').forEach((c) => obs.observe(c));
+  } else {
+    grid.querySelectorAll('.show-card').forEach((c) => c.classList.add('is-revealed'));
+  }
 }
 
 // Reel tiles: point the muted <video> at the uploaded file and give it
@@ -503,6 +616,22 @@ const reelObserver = new IntersectionObserver((entries) => {
   // Delegated (not per-tile) — tiles are rendered dynamically from
   // content.json, often after this code runs, so listeners attached
   // directly to them at load time would miss every tile entirely.
+  const showsGrid = document.getElementById('showsGrid');
+  if (showsGrid){
+    showsGrid.addEventListener('mouseover', (e) => {
+      const card = e.target.closest('.show-card');
+      if (!card || card.contains(e.relatedTarget)) return;
+      label.textContent = 'OPEN';
+      orb.classList.add('is-viewing');
+    });
+    showsGrid.addEventListener('mouseout', (e) => {
+      const card = e.target.closest('.show-card');
+      if (!card || card.contains(e.relatedTarget)) return;
+      orb.classList.remove('is-viewing');
+      label.textContent = '';
+    });
+  }
+
   const gallery = document.getElementById('gallery');
   if (gallery){
     // Adjacent tiles are only 4px apart, so the cursor briefly crosses

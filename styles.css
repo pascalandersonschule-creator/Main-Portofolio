@@ -480,6 +480,7 @@ html.lenis, html.lenis body{ height:auto; }
 }
 .filter:hover{ color:var(--white); border-color:var(--line-strong); background:rgba(242,242,242,0.08); }
 .filter:active{ transform:scale(0.96); transition-duration:120ms; }
+.filters[hidden], .filter[hidden]{ display:none; }
 .filter.is-active{
   background:rgba(242,242,242,0.15);
   color:var(--white);
@@ -933,6 +934,194 @@ html.lenis, html.lenis body{ height:auto; }
   margin:0 auto;
   padding:0 var(--gutter) 150px;
 }
+
+/* ============================================
+   SHOWS — one card per concert on the main page; each opens the
+   show's own gallery page (show.html). Editorial 3-column grid, the
+   middle column dropped so the row never reads as a flat card strip.
+   ============================================ */
+.shows{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:60px var(--gutter) 150px;
+}
+.shows__head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  flex-wrap:wrap;
+  gap:16px 24px;
+  margin-bottom:64px;
+}
+.shows__intro{
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  letter-spacing:0.04em;
+  color:var(--grey);
+}
+.shows__grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:72px 28px;
+  align-items:start;
+}
+.show-card{
+  display:block;
+  color:var(--white);
+  text-decoration:none;
+  opacity:0;
+  translate:0 24px;
+  transition:opacity .7s var(--ease-out), translate .7s var(--ease-out);
+}
+.show-card.is-revealed{ opacity:1; translate:0 0; }
+.show-card:nth-child(3n+2){ margin-top:96px; }
+.show-card__media{
+  position:relative;
+  aspect-ratio:4 / 5;
+  overflow:hidden;
+  border-radius:var(--radius-md);
+}
+.show-card__media::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 0 transparent;
+  transition:box-shadow .5s var(--ease-out);
+  pointer-events:none;
+}
+.show-card:hover .show-card__media::after,
+.show-card:focus-visible .show-card__media::after{ box-shadow:inset 0 0 0 1px var(--accent); }
+.show-card__img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity .6s var(--ease-out), transform .6s var(--ease-out);
+}
+.show-card__img.is-loaded{ opacity:1; }
+.show-card:hover .show-card__img,
+.show-card:focus-visible .show-card__img{ transform:scale(1.05); }
+.show-card__count{
+  position:absolute;
+  left:12px;
+  bottom:12px;
+  padding:6px 12px;
+  background:rgba(5,5,5,0.6);
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px);
+  border-radius:100px;
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.02em;
+  color:var(--white);
+  z-index:1;
+}
+.show-card__body{ padding-top:20px; }
+.show-card__title{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(1.3rem, 2.2vw, 1.7rem);
+  line-height:1.05;
+  letter-spacing:-0.025em;
+  transition:color .5s var(--ease-out);
+}
+.show-card:hover .show-card__title{ color:var(--accent); }
+.show-card__meta{
+  margin-top:8px;
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.03em;
+  color:var(--grey);
+}
+.show-card:focus-visible{ outline:none; }
+@media (max-width:1000px){
+  .shows__grid{ grid-template-columns:repeat(2, 1fr); gap:56px 20px; }
+  .show-card:nth-child(3n+2){ margin-top:0; }
+  .show-card:nth-child(2n){ margin-top:72px; }
+}
+@media (max-width:600px){
+  .shows__grid{ grid-template-columns:1fr; gap:48px; }
+  .show-card:nth-child(2n){ margin-top:0; }
+}
+@media (prefers-reduced-motion: reduce){
+  .show-card{ opacity:1; translate:0 0; transition:none; }
+  .show-card__img{ transition:opacity .3s linear; }
+  .show-card:hover .show-card__img{ transform:none; }
+}
+
+/* Single show page (show.html) — header block + the shared gallery. */
+.show-head{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:140px var(--gutter) 64px;
+}
+.show-head__back{
+  display:inline-block;
+  margin-bottom:40px;
+  font-family:var(--font-mono);
+  font-size:0.76rem;
+  letter-spacing:0.04em;
+  color:var(--grey);
+  text-decoration:none;
+  transition:color .5s var(--ease-out);
+}
+.show-head__back:hover{ color:var(--white); }
+.show-head__title{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(2.6rem, 7vw, 5.2rem);
+  line-height:0.95;
+  letter-spacing:-0.04em;
+  overflow-wrap:anywhere;
+}
+.show-head__meta{
+  margin-top:20px;
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  letter-spacing:0.04em;
+  color:var(--grey);
+}
+.show-head__text{
+  margin-top:28px;
+  max-width:60ch;
+  color:var(--grey);
+  font-size:1.05rem;
+  line-height:1.6;
+}
+.show-next{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:0 var(--gutter) 150px;
+}
+.show-next__link{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding-top:40px;
+  border-top:1px solid var(--line);
+  color:var(--white);
+  text-decoration:none;
+}
+.show-next__label{
+  font-family:var(--font-mono);
+  font-size:0.74rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--grey);
+}
+.show-next__title{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(2rem, 5vw, 3.4rem);
+  line-height:1;
+  letter-spacing:-0.03em;
+  transition:color .5s var(--ease-out), translate .5s var(--ease-out);
+}
+.show-next__title::after{ content:' →'; }
+.show-next__link:hover .show-next__title{ color:var(--accent); translate:8px 0; }
 
 /* ============================================
    Accessibility: focus states

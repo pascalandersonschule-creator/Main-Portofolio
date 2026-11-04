@@ -1,3 +1,10 @@
+// Clean address bar: /impressum instead of /impressum.html. Netlify serves
+// both, so this only changes what's displayed — no reload, no redirect.
+if (/\.html$/.test(location.pathname)) {
+  const clean = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+  history.replaceState(null, '', clean + location.search + location.hash);
+}
+
 // Fills in the Impressum/Datenschutz identity fields (name, address,
 // phone, VAT ID) from content.json's "legal" section, so Pascal can
 // edit them via /admin instead of touching this HTML directly.
