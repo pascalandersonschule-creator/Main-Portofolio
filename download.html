@@ -13,7 +13,7 @@
 <div class="vignette" aria-hidden="true"></div>
 
 <header class="nav">
-  <a href="index.html#top" class="nav__logo">Pascal Anderson</a>
+  <a href="/#top" class="nav__logo">Pascal Anderson</a>
 </header>
 
 <main class="legal portal">
@@ -29,7 +29,18 @@
       <p id="portalErrorText"></p>
     </div>
 
-    <ol class="portal__list" id="portalList" aria-live="polite" hidden></ol>
+    <div class="portal__bar" id="portalBar" hidden>
+      <div class="portal__bar-actions">
+        <button type="button" class="portal__btn" id="selectModeBtn" aria-pressed="false">Auswählen</button>
+        <button type="button" class="portal__btn" id="selectAllBtn">Alle auswählen</button>
+      </div>
+      <p class="portal__count" id="selectCount" aria-live="polite"></p>
+      <button type="button" class="portal__btn portal__btn--primary" id="downloadBtn">Alle herunterladen</button>
+    </div>
+
+    <ul class="portal__grid" id="portalGrid" hidden></ul>
+
+    <p class="portal__status" id="downloadStatus" role="status" hidden></p>
 
     <p class="portal__meta" id="portalMeta" hidden></p>
   </div>
@@ -38,9 +49,9 @@
 <footer class="footer">
   <span>© <span id="year"></span> Pascal Anderson</span>
   <div class="footer__links">
-    <a href="index.html">Back to site</a>
-    <a href="impressum.html">Impressum</a>
-    <a href="datenschutz.html">Datenschutz</a>
+    <a href="/">Back to site</a>
+    <a href="/impressum">Impressum</a>
+    <a href="/datenschutz">Datenschutz</a>
   </div>
 </footer>
 
