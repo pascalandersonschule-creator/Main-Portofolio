@@ -96,9 +96,11 @@ if (/\.html$/.test(location.pathname)) {
   const MIN_RATIO = 0.5;
   const MAX_RATIO = 2.4;
 
-  function colSpanFor(ratio) {
+  function colSpanFor(ratio, index) {
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-    if (isMobile) return ratio > 1.2 ? 2 : 1;
+    // Mobile rhythm: every 5th photo runs full width, so the two-column
+    // grid doesn't read as a uniform wall on a phone.
+    if (isMobile) return ratio > 1.2 || index % 5 === 0 ? 2 : 1;
     if (ratio > 2.0) return 6;
     if (ratio > 1.6) return 4;
     if (ratio > 1.2) return 3;
@@ -109,10 +111,10 @@ if (/\.html$/.test(location.pathname)) {
     if (!gallery) return;
     const tiles = Array.from(gallery.querySelectorAll('.tile[data-has-media="true"]'));
 
-    const ratios = tiles.map((tile) => {
+    const ratios = tiles.map((tile, index) => {
       const measured = parseFloat(tile.dataset.ratio);
       const ratio = Math.min(Math.max(measured || 4 / 5, MIN_RATIO), MAX_RATIO);
-      tile.style.gridColumn = `span ${colSpanFor(ratio)}`;
+      tile.style.gridColumn = `span ${colSpanFor(ratio, index)}`;
       // Neutralize the fallback CSS aspect-ratio once we're computing a
       // real row-span from here — see script.js's galleryMasonry for
       // why this matters (leaving it set fights the row-span it's

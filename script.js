@@ -132,14 +132,14 @@ function applyContent(data){
     if (data.hero.float1Image){
       setResponsiveImage(document.querySelector('[data-slot="float1"]'), data.hero.float1Image, {
         widths: [500, 800, 1100],
-        sizes: '45vw',
+        sizes: '(max-width: 960px) 72vw, 45vw',
         alt: '',
       });
     }
     if (data.hero.float2Image){
       setResponsiveImage(document.querySelector('[data-slot="float2"]'), data.hero.float2Image, {
-        widths: [350, 600],
-        sizes: '30vw',
+        widths: [350, 600, 900],
+        sizes: '(max-width: 960px) 52vw, 30vw',
         alt: '',
       });
     }
@@ -392,6 +392,7 @@ function renderShows(shows){
 
   grid.innerHTML = '';
   section.hidden = list.length === 0;
+  section.classList.toggle('has-many', list.length > 1);
 
   list.forEach((sh, i) => {
     const photos = sh.photos.filter(Boolean);
@@ -524,9 +525,11 @@ const reelObserver = new IntersectionObserver((entries) => {
   // Desktop grid is 6 columns wide; mobile is 2. A span has to fit
   // within whichever is currently active, or the tile would overflow
   // sideways instead of just wrapping.
-  function colSpanFor(ratio){
+  function colSpanFor(ratio, index){
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-    if (isMobile) return ratio > 1.2 ? 2 : 1;
+    // Mobile rhythm: every 5th photo runs full width, so the two-column
+    // grid doesn't read as a uniform wall on a phone.
+    if (isMobile) return ratio > 1.2 || index % 5 === 0 ? 2 : 1;
     if (ratio > 2.0) return 6;
     if (ratio > 1.6) return 4;
     if (ratio > 1.2) return 3;
@@ -538,11 +541,11 @@ const reelObserver = new IntersectionObserver((entries) => {
 
     // Write pass 1: column span — this changes how wide each tile is,
     // so it has to land before we measure anything.
-    const ratios = tiles.map((tile) => {
+    const ratios = tiles.map((tile, index) => {
       const measured = parseFloat(tile.dataset.ratio);
       const raw = measured || FALLBACK_ASPECT[tile.dataset.category] || 4 / 5;
       const ratio = Math.min(Math.max(raw, MIN_RATIO), MAX_RATIO);
-      tile.style.gridColumn = `span ${colSpanFor(ratio)}`;
+      tile.style.gridColumn = `span ${colSpanFor(ratio, index)}`;
       // The CSS aspect-ratio in styles.css is only a placeholder shape
       // for the instant before this runs. Once we're computing a real
       // row-span from here on, it has to be cleared — otherwise it wins
@@ -824,6 +827,47 @@ const reelObserver = new IntersectionObserver((entries) => {
     if (e.key === 'ArrowLeft') step(-1);
     if (e.key === 'ArrowRight') step(1);
   });
+
+  // Touch: swipe left/right to step, swipe down to close.
+  let touchX = null;
+  let touchY = null;
+  box.addEventListener('touchstart', (e) => {
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  box.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    touchX = touchY = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+    else if (dy > 90 && Math.abs(dy) > Math.abs(dx)) close();
+  });
+})();
+
+// --------------------------------------------
+// Mobile hero depth: the two photos drift at different speeds while
+// scrolling (touch has no cursor to react to). Uses the independent
+// `translate` property so it never fights any transform.
+// --------------------------------------------
+(function heroParallaxMobile(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const f1 = document.querySelector('.hero__float--1');
+  const f2 = document.querySelector('.hero__float--2');
+  if (!f1 || !f2) return;
+  const mobile = window.matchMedia('(max-width: 960px)');
+  let ticking = false;
+  function update(){
+    ticking = false;
+    if (!mobile.matches){ f1.style.translate = ''; f2.style.translate = ''; return; }
+    const y = Math.min(window.scrollY, window.innerHeight * 1.5);
+    f1.style.translate = `0 ${(y * -0.06).toFixed(1)}px`;
+    f2.style.translate = `0 ${(y * -0.16).toFixed(1)}px`;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking){ ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  update();
 })();
 
 // --------------------------------------------
@@ -987,6 +1031,7 @@ const reelObserver = new IntersectionObserver((entries) => {
   // once media is uploaded and could throw off ScrollTrigger's math).
   const revealGroups = [
     { selector: '.work__head > *', y: 20, stagger: 0.08 },
+    { selector: '.shows__head > *', y: 20, stagger: 0.08 },
     { selector: '.about__media, .about__text', y: 28, stagger: 0.1 },
     { selector: '.contact__inner > *', y: 20, stagger: 0.06 },
   ];

@@ -1408,3 +1408,84 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .portal__img, .portal__check, .portal__media::after, .portal__btn{ transition:none; }
   .portal__media:hover .portal__img, .portal__tile.is-selected .portal__img{ transform:none; }
 }
+
+/* ============================================
+   MOBILE — touch has no hover and no cursor, so the desktop effects
+   (cursor orb, magnetic tiles, hover zoom) never fire there. These
+   replace them with things that react to scrolling and swiping
+   instead, and bring the photos back into the first screen.
+   ============================================ */
+@media (max-width:960px){
+  /* Hero: headline bigger, the two photos come back (desktop hid them)
+     as an overlapping stack that peeks in under the buttons. */
+  .hero{ min-height:auto; padding-bottom:40px; gap:56px; }
+  .hero__title{ font-size:clamp(3.2rem, 15.5vw, 6rem); line-height:0.9; }
+  .hero__scroll{ display:none; }
+  .hero__visual{
+    display:block;
+    height:auto;
+    aspect-ratio:1 / 1.08;
+    margin-inline:calc(var(--gutter) * -0.5);
+  }
+  .hero__float--1{ width:70%; }
+  .hero__float--2{ width:50%; bottom:2%; }
+  .hero__float{ will-change:translate; }
+
+  /* Section titles: editorial scale on small screens. */
+  .section-title{ font-size:clamp(2.9rem, 14vw, 4rem); }
+  .work{ padding-top:110px; }
+}
+
+@media (max-width:860px){
+  /* Gallery runs edge to edge — full-bleed photos instead of a boxed grid. */
+  .work .gallery, .personal-gallery .gallery{
+    margin-inline:calc(var(--gutter) * -1);
+    gap:3px;
+  }
+  .work .gallery .tile, .personal-gallery .gallery .tile{ border-radius:0; }
+}
+
+/* Touch devices: photos "develop" as they scroll into view — a curtain
+   opens from below while the image settles from a slight zoom. This is
+   the mobile counterpart of the desktop hover zoom. */
+@media (hover:none){
+  .tile{ clip-path:inset(14% 0 0 0); transition:transform 140ms var(--ease-out), opacity .7s var(--ease-out), translate .7s var(--ease-out), clip-path .9s var(--ease-out); }
+  .tile.is-revealed{ clip-path:inset(0 0 0 0); }
+  .tile:not(.is-revealed) .tile__img{ transform:scale(1.14); }
+  .tile .tile__img{ transition:opacity .5s var(--ease-out), transform 1.1s var(--ease-out); }
+  .show-card__media{ clip-path:inset(10% 0 0 0); transition:clip-path .9s var(--ease-out); }
+  .show-card.is-revealed .show-card__media{ clip-path:inset(0 0 0 0); }
+  .show-card:not(.is-revealed) .show-card__img{ transform:scale(1.12); }
+  .show-card__img{ transition:opacity .6s var(--ease-out), transform 1.1s var(--ease-out); }
+}
+
+/* Shows on phones: a sideways swipe row instead of one long column —
+   the next card peeks in at the edge so it's obvious there's more. */
+@media (max-width:600px){
+  .shows__grid{
+    display:grid;
+    grid-auto-flow:column;
+    grid-auto-columns:80%;
+    grid-template-columns:none;
+    gap:14px;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:var(--gutter);
+    margin-inline:calc(var(--gutter) * -1);
+    padding-inline:var(--gutter);
+    padding-bottom:8px;
+    scrollbar-width:none;
+  }
+  .shows__grid::-webkit-scrollbar{ display:none; }
+  .show-card{ scroll-snap-align:start; }
+  .show-card:nth-child(n){ margin-top:0; }
+  .shows.has-many .shows__intro::after{ content:'  — swipe →'; color:var(--white); }
+  .shows__head{ margin-bottom:36px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .tile, .tile.is-revealed, .show-card__media{ clip-path:none; }
+  .tile:not(.is-revealed) .tile__img, .show-card:not(.is-revealed) .show-card__img{ transform:none; }
+}
+
