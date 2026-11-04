@@ -5,6 +5,8 @@
 // Storage layout in the R2 bucket (nothing about clients is in git):
 //   clients/<uuid>/.meta.json   → { title, note, expiryDate, createdAt }
 //   clients/<uuid>/<file>       → the delivered photos
+//   clients/<uuid>/.thumbs/<file>.jpg → small preview (~1200 px JPEG),
+//                                  made in the admin's browser on upload
 //
 // Secrets come only from Netlify environment variables and are used
 // only in this server-side module. Nothing here is ever sent to a browser
@@ -36,6 +38,8 @@ const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 const ROOT = 'clients/';
 const META = '.meta.json';
+const THUMBS = '.thumbs/';
+const thumbKey = (clientId, fileName) => `${ROOT}${clientId}/${THUMBS}${fileName}.jpg`;
 const MAX_DAYS = 30; // must match the R2 lifecycle rule on "clients/"
 
 // UUIDv4 only (crypto.randomUUID(): 122 random bits from the OS CSPRNG).
@@ -140,7 +144,7 @@ async function listClients() {
     if (!byId.has(id)) byId.set(id, { clientId: id, files: 0, bytes: 0, hasMeta: false });
     const c = byId.get(id);
     if (name === META) c.hasMeta = true;
-    else if (name) { c.files += 1; c.bytes += o.size; }
+    else if (name && !name.includes('/')) { c.files += 1; c.bytes += o.size; } // previews don't count
   }
   const clients = await Promise.all([...byId.values()].map(async (c) => {
     const meta = c.hasMeta && UUID_RE.test(c.clientId) ? await readMeta(c.clientId) : null;
@@ -149,11 +153,17 @@ async function listClients() {
   return clients.sort((a, b) => String(b.meta?.createdAt || '').localeCompare(String(a.meta?.createdAt || '')));
 }
 
+// Delivered files of one client. thumbKey is set when a preview exists.
 async function listFiles(clientId) {
   const prefix = `${ROOT}${clientId}/`;
-  return (await listAll(prefix))
-    .map((o) => ({ ...o, name: o.key.slice(prefix.length) }))
+  const all = (await listAll(prefix)).map((o) => ({ ...o, name: o.key.slice(prefix.length) }));
+  const thumbs = new Set(all.filter((o) => o.name.startsWith(THUMBS)).map((o) => o.key));
+  return all
     .filter((o) => o.name && o.name !== META && !o.name.includes('/'))
+    .map((o) => {
+      const t = thumbKey(clientId, o.name);
+      return { ...o, thumbKey: thumbs.has(t) ? t : null };
+    })
     .sort((a, b) => a.name.localeCompare(b.name, 'de', { numeric: true }));
 }
 
@@ -164,7 +174,7 @@ async function deleteClient(clientId) {
 }
 
 async function deleteFile(clientId, fileName) {
-  await deleteKeys([`${ROOT}${clientId}/${fileName}`]);
+  await deleteKeys([`${ROOT}${clientId}/${fileName}`, thumbKey(clientId, fileName)]);
 }
 
 // Deletes every expired client, and any folder whose .meta.json is gone
@@ -193,9 +203,21 @@ const signUpload = (clientId, fileName, expiresIn) => getSignedUrl(
   new PutObjectCommand({ Bucket: bucket(), Key: `${ROOT}${clientId}/${fileName}` }),
   { expiresIn }
 );
+// Previews are shown inline in an <img>, so no attachment disposition.
+const signThumb = (key, expiresIn) => getSignedUrl(
+  client(),
+  new GetObjectCommand({ Bucket: bucket(), Key: key, ResponseContentType: 'image/jpeg' }),
+  { expiresIn }
+);
+const signThumbUpload = (clientId, fileName, expiresIn) => getSignedUrl(
+  client(),
+  new PutObjectCommand({ Bucket: bucket(), Key: thumbKey(clientId, fileName) }),
+  { expiresIn }
+);
 
 module.exports = {
   UUID_RE, FILE_NAME_RE, MAX_DAYS,
   isExpired, readMeta, createClient, listClients, listFiles,
   deleteClient, deleteFile, purgeExpired, signDownload, signUpload,
+  signThumb, signThumbUpload,
 };

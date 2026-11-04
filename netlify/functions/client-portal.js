@@ -15,6 +15,7 @@
 //     admin-list-files     { clientId }
 //     admin-delete-file    { clientId, fileName }
 //     get-upload-url       { clientId, fileName }
+//     get-thumb-upload-url { clientId, fileName }  (preview of fileName)
 //
 // Errors are always { error: { code, message } }.
 // ============================================================
@@ -63,7 +64,7 @@ function isAdmin(user) {
 }
 
 const ACTIONS = new Set([
-  'get-downloads', 'get-upload-url', 'admin-list-clients', 'admin-create-client',
+  'get-downloads', 'get-upload-url', 'get-thumb-upload-url', 'admin-list-clients', 'admin-create-client',
   'admin-delete-client', 'admin-list-files', 'admin-delete-file',
 ]);
 
@@ -79,6 +80,7 @@ async function getDownloads(origin, clientId) {
     name: f.name,
     size: f.size,
     url: await portal.signDownload(f.key, f.name, DOWNLOAD_URL_TTL),
+    thumb: f.thumbKey ? await portal.signThumb(f.thumbKey, DOWNLOAD_URL_TTL) : null,
   })));
   return ok(origin, {
     title: meta.title || '',
@@ -157,6 +159,12 @@ async function admin(origin, action, body) {
     return ok(origin, { url, expiresIn: UPLOAD_URL_TTL });
   }
 
+  if (action === 'get-thumb-upload-url') {
+    if (portal.isExpired(meta)) return fail(origin, 410, 'EXPIRED', 'Dieser Kunde ist abgelaufen.');
+    const url = await portal.signThumbUpload(clientId, fileName, UPLOAD_URL_TTL);
+    return ok(origin, { url, expiresIn: UPLOAD_URL_TTL });
+  }
+
   return fail(origin, 400, 'INVALID_REQUEST', 'Unknown action.');
 }
 
@@ -188,7 +196,7 @@ exports.handler = async (event, context) => {
       return await getDownloads(origin, clientId);
     }
 
-    if (typeof action === 'string' && (action.startsWith('admin-') || action === 'get-upload-url')) {
+    if (typeof action === 'string' && (action.startsWith('admin-') || action === 'get-upload-url' || action === 'get-thumb-upload-url')) {
       // Netlify verifies the Identity JWT signature itself and only then
       // fills clientContext.user; a missing/forged/expired token leaves it
       // empty. On top of that, only allow-listed emails are admins.
