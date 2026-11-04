@@ -113,5 +113,32 @@
         "image": ""
       }
     ]
-  }
+  },
+  "shows": [
+    {
+      "artist": "Botticelli Baby",
+      "venue": "Tour 2026",
+      "city": "Kiel",
+      "cover": "/uploads/dsc08063.jpg",
+      "photos": [
+        "/uploads/dsc08063.jpg",
+        "/uploads/dsc08194.jpg",
+        "/uploads/dsc08032.jpg",
+        "/uploads/dsc08019.jpg",
+        "/uploads/dsc07971-edit-2.jpg",
+        "/uploads/dsc08391.jpg"
+      ]
+    },
+    {
+      "artist": "MVRTN",
+      "venue": "Kieler Woche 2026",
+      "cover": "/uploads/dsc05750-edit.jpg",
+      "photos": [
+        "/uploads/dsc05750-edit.jpg",
+        "/uploads/dsc05645.jpg",
+        "/uploads/dsc05483-edit.jpg",
+        "/uploads/dsc05518-edit.jpg"
+      ]
+    }
+  ]
 }
