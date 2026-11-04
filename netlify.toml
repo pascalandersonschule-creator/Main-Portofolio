@@ -98,7 +98,8 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://identity.netlify.com https://api.netlify.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com; style-src 'self'; img-src 'self' data: https://*.r2.cloudflarestorage.com; media-src 'self'; font-src 'self'; connect-src 'self' https://identity.netlify.com https://api.netlify.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+
 
 # /admin needs a looser policy: Decap CMS (also self-hosted from
 # /vendor now — no unpkg.com needed here either) is a large bundled app
