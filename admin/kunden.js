@@ -28,7 +28,7 @@
     while (b >= 1024 && i < u.length - 1) { b /= 1024; i++; }
     return `${b.toLocaleString('de-DE', { maximumFractionDigits: i < 2 ? 0 : 1 })} ${u[i]}`;
   }
-  const downloadLink = (id) => `${location.origin}/download.html?client=${id}`;
+  const downloadLink = (id) => `${location.origin}/download?client=${id}`;
 
   // Make a camera/OS file name acceptable to the server: strip accents,
   // replace anything outside the allowed set. "Hochzeit Größe 1.JPG" →
@@ -72,6 +72,30 @@
       xhr.onerror = () => reject(new Error('Netzwerkfehler (CORS-Regel im R2-Bucket gesetzt?)'));
       xhr.send(file);
     });
+  }
+
+  // Small JPEG preview for the client's download page, made right here
+  // in the browser (the photo never goes anywhere else). ~1200 px long
+  // edge keeps the gallery fast instead of loading 20 MB originals.
+  // Returns null for files the browser can't decode (RAW, ZIP, video, …)
+  // — those just show a file-type tile on the download page.
+  const THUMB_EDGE = 1200;
+  async function makeThumb(file) {
+    if (!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type)) return null;
+    try {
+      const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      const scale = Math.min(1, THUMB_EDGE / Math.max(bmp.width, bmp.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(bmp.width * scale);
+      canvas.height = Math.round(bmp.height * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+      bmp.close();
+      return await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.82));
+    } catch {
+      return null;
+    }
   }
 
   // ---------- views ----------
@@ -196,7 +220,15 @@
           const j = jobs[next++];
           try {
             const { url } = await api('get-upload-url', { clientId: c.clientId, fileName: j.name });
-            await putFile(url, j.file, (p) => { j.bar.value = p; });
+            await putFile(url, j.file, (p) => { j.bar.value = p * 0.95; });
+            // Preview is a nice-to-have: if it fails, the photo is still delivered.
+            const thumb = await makeThumb(j.file);
+            if (thumb) {
+              try {
+                const t = await api('get-thumb-upload-url', { clientId: c.clientId, fileName: j.name });
+                await putFile(t.url, thumb, () => {});
+              } catch { /* ignore */ }
+            }
             j.bar.value = 1;
             j.label.textContent = j.name === j.file.name ? 'fertig' : `fertig (als ${j.name})`;
           } catch (e) {
